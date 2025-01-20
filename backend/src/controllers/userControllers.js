@@ -1,4 +1,5 @@
 const { getDB } = require('../config/db');
+const {ObjectId} = require("mongodb");
 
 
 
@@ -17,8 +18,9 @@ exports.getUserById = async (req, res) => {
     try {
         const DB = await getDB();
         const {id} = req.params;
+        const objectId = new ObjectId(id);
         console.log(id);
-        const account = await DB.collection('Accounts').findOne({_id:id});
+        const account = await DB.collection('Accounts').findOne({_id:objectId});
 
         if(!account){
             return res.status(404).json({error: 'Account not found'});
