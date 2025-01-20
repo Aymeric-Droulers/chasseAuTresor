@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestion étapes</title>
+    <style>
+        #down0 {
+            position: relative;
+            left: 21.88px;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <form>
+            <label for="stepName">Nom de l'étape:</label>
+            <br>
+            <input type="text" id="stepName">
+            <br>
+            <label for="stepHint">Indice de l'étape:</label>
+            <br>
+            <input type="text" id="stepHint">
+            <br>
+            <br>
+            <input type="button" value="Valider l'étape" id="validateStep">
+            <br>
+        </form>
+        <br>
+        Toutes les Etapes: <input type="button" value="Changer l'ordre des étapes" id="changeOrder">
+        <br>
+        <table id="tableSteps"></table>
+        <br>
+        <input type="button" value="Valider toutes les étapes" id="validateAll">
+        <br>
+    </main>
+    <script src="gestionEtape.js"></script>
+</body>
+</html>
