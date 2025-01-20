@@ -18,10 +18,13 @@ function createStep() {
     var hintStep = inputStepHint.value;
     listSteps.push([nameStep,hintStep]);
     var newStep = document.createElement("tr");
+    var tableStepNumber = document.createElement("th");
     var tableStepName = document.createElement("th");
     var tableStepHint = document.createElement("th");
+    tableStepNumber.innerText = listSteps.length;
     tableStepName.innerText = nameStep;
     tableStepHint.innerText = hintStep;
+    newStep.appendChild(tableStepNumber);
     newStep.appendChild(tableStepName);
     newStep.appendChild(tableStepHint);
     tableSteps.appendChild(newStep);
@@ -78,10 +81,10 @@ function changeOrder() {
         listDownArrows = [];
         for (let i = 0; i < tableSteps.children.length; i++) {
             if (i != 0 && i != tableSteps.children.length-1) {
-                tableSteps.children[i].removeChild(tableSteps.children[i].children[4]);
+                tableSteps.children[i].removeChild(tableSteps.children[i].children[5]);
             }
+            tableSteps.children[i].removeChild(tableSteps.children[i].children[4]);
             tableSteps.children[i].removeChild(tableSteps.children[i].children[3]);
-            tableSteps.children[i].removeChild(tableSteps.children[i].children[2]);
         }
     }
 }
