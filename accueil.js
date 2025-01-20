@@ -13,7 +13,7 @@ Connect.addEventListener("click",DoConnect);
 
 function DoSignup(){
 
-    const addAccount = '/api/accounts/addAccount';
+    const addAccount = 'http://localhost:3000/api/accounts/addAccount';
     var Name = document.getElementById("Name");
     var Password = document.getElementById("Password"); 
     var Mail = document.getElementById("Mail");
@@ -23,13 +23,14 @@ function DoSignup(){
     data["name"] = Name;
     data["password"] = Password;
     data["mail"] = Mail;
+    let total = {}
 
-    fetch('/api/accounts')
+    fetch('http://localhost:3000/api/accounts')
     .then(response => {
         if (!response.ok) {
         throw new Error('Network response was not ok ' + response.statusText);
         }
-        return response.json();
+        total = response.json();
     })
     .then(exit => {
         console.log(exit);
@@ -38,13 +39,13 @@ function DoSignup(){
         console.error('There has been a problem with your fetch operation:', error);
     });
 
-    if(!data==exit){
+    //if(data["mail"]=!total["mail"]){
         const options = {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify(data)
+            body: data
         }
         //Mettre dans la db
         fetch(addAccount, options)
@@ -61,9 +62,9 @@ function DoSignup(){
             console.error('Erreur:', error);
         });
     
-        window.location.assign('defaut.html');
+        //window.location.assign('defaut.html');
     }
-}
+//}
 
 function DoConnect(){
     //Vérifier que le compte existe
