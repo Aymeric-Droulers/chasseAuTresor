@@ -46,12 +46,12 @@ function changeOrder() {
     if (buttonChangeOrder.value == "Changer l'ordre des étapes") {
         buttonChangeOrder.value = "Valider l'ordre actuel";
         for (let i = 0; i < tableSteps.children.length; i++) {
-            /*var deleteButton = document.createElement("button");
+            var deleteButton = document.createElement("button");
             deleteButton.innerText = "🗑";
             deleteButton.id = "delete" + i;
             tableSteps.children[i].appendChild(deleteButton);
             listDeletes.push(deleteButton);
-            deleteButton.addEventListener("mousedown",findStepToDelete);*/
+            deleteButton.addEventListener("mousedown",deleteStep.bind(deleteButton));
 
             if (i != 0) {
                 var upButton = document.createElement("button");
@@ -78,8 +78,9 @@ function changeOrder() {
         listDownArrows = [];
         for (let i = 0; i < tableSteps.children.length; i++) {
             if (i != 0 && i != tableSteps.children.length-1) {
-                tableSteps.children[i].removeChild(tableSteps.children[i].children[3]);
+                tableSteps.children[i].removeChild(tableSteps.children[i].children[4]);
             }
+            tableSteps.children[i].removeChild(tableSteps.children[i].children[3]);
             tableSteps.children[i].removeChild(tableSteps.children[i].children[2]);
         }
     }
@@ -93,7 +94,7 @@ function stepGoUp() {
         toChange += char[i];
     }
     toChange = parseInt(toChange);
-    
+
     let tmp = listSteps[toChange];
     listSteps[toChange] = listSteps[toChange-1];
     listSteps[toChange-1] = tmp;
@@ -125,12 +126,15 @@ function stepGoDown() {
     changeOrder();
 }
 
-/*function findStepToDelete() {
-    for (let i = 0; i < tableSteps.children.length; i++) {
-        tableSteps.children[i].addEventListener("mouseup", () => {toDelete = i; deleteStep()});
-    }
-}
-
 function deleteStep() {
+    changeOrder();
+    let char = this.id;
+    let toDelete = "";
+    for (let i = 6; i < char.length; i++) {
+        toDelete += char[i];
+    }
+    toDelete = parseInt(toDelete);
+    listSteps.splice(toDelete,1);
     tableSteps.removeChild(tableSteps.children[toDelete]);
-}*/
+    changeOrder();
+}
