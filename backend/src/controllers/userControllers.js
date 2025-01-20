@@ -11,7 +11,7 @@ exports.getAllUsers = async (req, res) => {
     }catch(err) {
         res.status(500).json(err);
     }
-    
+
 };
 
 
@@ -33,5 +33,27 @@ exports.getUserById = async (req, res) => {
 };
 
 exports.addAccount = async (req, res) => {
+    try {
+        console.log(req);
+        const { name,password, mail } = req.body;
+        console.log(req.body);
+        if (!name ||!password|| !mail) {
+            return res.status(400).json({ message: "Le nom et l'email sont requis" });
+        }
 
+        const insertData ={
+            "name": name,
+            "password":password,
+            "mail":mail,
+            "chassesParticipated":[],
+            "chassesCreated":[]
+        }
+        const db = getDB();
+        const result = await db.collection('Accounts').insertOne(insertData);
+        console.log(result);
+        res.status(201).json({ message: "Utilisateur créé" });
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({ message: "Erreur serveur", error });
+    }
 }
