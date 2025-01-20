@@ -53,13 +53,13 @@ document.querySelector('form').addEventListener('submit', async function(event) 
 
     console.log(data);
 
-    const url = "ip/chasses/addChasse";
+    const url = "http://localhost:3000/api/accounts";
     fetch(url, {
-        method: 'POST',
+        method: 'GET',
         headers: {
             'Content-Type': 'application/json'
         },
-        body: JSON.stringify(data),
+        //body: JSON.stringify(data),
     })
     .then(response => {
         if (!response.ok) {
