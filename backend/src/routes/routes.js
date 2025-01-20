@@ -1,12 +1,13 @@
 // src/routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
-//const { getAllUsers, createUser } = require('../controllers/userController');
+const { getAllUsers,getUserById} = require('../controllers/userControllers');
 
 // GET /api/users
-router.get('/users', getAllUsers);
+router.get('/accounts', getAllUsers);
+router.get('/accounts/:id', getUserById);
 
 // POST /api/users
-router.post('/users', createUser);
+//router.post('/accounts/accountX', createUser);
 
 module.exports = router;
