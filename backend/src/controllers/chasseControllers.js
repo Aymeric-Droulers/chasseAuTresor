@@ -126,6 +126,7 @@ Ajoute une etape a une chasse
 
 exports.addStep = async (req, res) => {
     try {
+        console.log("a")
         const {id} = req.params;
         const objectId = new ObjectId(id);
         const data = {
@@ -134,9 +135,33 @@ exports.addStep = async (req, res) => {
             stepHint: req.body.stepHint,
             stepCode: req.body.stepCode
         };
+
+
         const validation = await validateStepData(data);
-        if (validation.status === false) {
+        const chasse = await getChasseById(id);
+        let currentSteps = chasse.steps;
+
+        const lastId= currentSteps[currentSteps.length-1].stepId;
+
+        currentSteps.push({
+            stepId:lastId+1,
+            stepName:req.body.stepName,
+            stepHint:req.body.stepHint,
+            stepCode:req.body.stepCode
+        })
+
+        if (!validation.success) {
             //update de la chasse
+            res.status(400).json({status: false, message: validation.message});
+            console.log("les données ne sont pas valides");
+        }else{
+            const db = getDB();
+            const result = await db.collection('Chasses').updateOne(
+                { _id: objectId },
+                { $set: { steps: currentSteps } }
+            );
+            console.log("step added");
+            res.status(201).json({status:true, message: "Etape ajoutée" });
         }
 
     }catch (err){
