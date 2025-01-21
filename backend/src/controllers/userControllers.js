@@ -33,6 +33,24 @@ exports.getUserById = async (req, res) => {
 
 
 
+exports.getUserByMail = async (req, res) => {
+    console.log("getmail");
+    try {
+        const DB = await getDB();
+        const {mail} = req.params;
+        console.log(req);
+        const account = await DB.collection('Accounts').findOne({mail:mail});
+        if(!account){
+            return res.status(404).json({error: 'Account not found'});
+        }
+        res.status(200).json(account);
+    }catch(err) {
+        res.status(500).json(err);
+    }
+}
+
+
+
 exports.addAccount = async (req, res) => {
     try {
         const { name,password, mail } = req.body;
