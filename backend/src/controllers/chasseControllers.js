@@ -63,7 +63,7 @@ exports.addChasse = async (req, res) => {
             "peopleByTeam":peopleByTeam,
             "startDate":startDate,
             "duration":duration,
-            "theme":theme,
+            "themes":theme,
             "accessCode":accessCode,
             "place":place,
             "mapFile":"",
