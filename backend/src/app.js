@@ -10,7 +10,12 @@ const app = express();
 // Middleware pour parser les JSON
 app.use(express.json());
 //autoriser toutes les origines
-app.use(cors());
+const corsOptions = {
+    methods: ['GET', 'POST', 'PUT', 'DELETE'], // Méthodes autorisées
+    credentials: true, // Autoriser les cookies ou credentials
+};
+
+app.use(cors(corsOptions));
 // Routes
 app.use('/api', userRoutes);
 

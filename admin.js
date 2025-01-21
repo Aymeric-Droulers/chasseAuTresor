@@ -51,15 +51,29 @@ document.querySelector('form').addEventListener('submit', async function(event) 
     const startDate = new Date(data['startDate']);
     data['startDate'] = startDate.toISOString();
 
+    // Convert themes to array
+    data['themes'] = data['themes'].split(',');
+
+    // Check if start date is in the future
+    if (startDate < new Date()) {
+        alert('La date de départ doit être dans le futur');
+        return;
+    }
+
+    // Remove empty values from themes
+    data['themes'] = data['themes'].filter(function(value) {
+        return value !== '';
+    });
+
     console.log(data);
 
-    const url = "http://localhost:3000/api/accounts";
+    const url = "http://localhost:3000/api/chasses/addChasse";
     fetch(url, {
-        method: 'GET',
+        method: 'POST',
         headers: {
             'Content-Type': 'application/json'
         },
-        //body: JSON.stringify(data),
+        body: JSON.stringify(data),
     })
     .then(response => {
         if (!response.ok) {
@@ -79,12 +93,12 @@ document.getElementById('auto-fill').addEventListener('click', function() {
     document.getElementById('name').value = 'Chasse au trésor test';
     document.getElementById('nbTeams').value = 5;
     document.getElementById('peopleByTeam').value = 4;
-    document.getElementById('startDate').value = '2023-12-31T12:00';
+    document.getElementById('startDate').value = '2025-12-31T12:00';
     document.getElementById('duration_hours').value = 2;
     document.getElementById('duration_minutes').value = 30;
     document.getElementById('accessCode').value = 'TEST1234';
     document.getElementById('randomDeparture').checked = true;
     document.getElementById('place').value = "Arras";
     document.getElementById("randomSteps").checked = true;
-    document.getElementById("theme").value = "medieval";
+    document.getElementById("themes").value = "Médiéval,Difficile,Aventure";
 });
