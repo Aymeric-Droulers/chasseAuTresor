@@ -14,9 +14,9 @@ Connect.addEventListener("click",DoConnect);
 function DoSignup(){
 
     const addAccount = 'http://localhost:3000/api/accounts/addAccount';
-    var Name = document.getElementById("Name");
-    var Password = document.getElementById("Password"); 
-    var Mail = document.getElementById("Mail");
+    var Name = document.getElementById("Name").value;
+    var Password = document.getElementById("Password").value; 
+    var Mail = document.getElementById("Mail").value;
     //Vérifier que le compte n'existe pas
     
     const data = {}
@@ -43,9 +43,11 @@ function DoSignup(){
         const options = {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+              
+
             },
-            body: data
+            body: JSON.stringify(data)
         }
         //Mettre dans la db
         fetch(addAccount, options)
