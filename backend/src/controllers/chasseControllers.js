@@ -2,6 +2,7 @@ const { getDB } = require('../config/db');
 const {ObjectId} = require("mongodb");
 const{validateChasseData}=require('../middleware/validateChasseData');
 const {getChasseById} = require("../utils/getChasseById");
+const {validateStepData} = require("../middleware/validateStepData");
 
 
 
@@ -41,15 +42,41 @@ exports.getChasseById=async (req, res) => {
     }
 }
 
-
+/*
+*
+Renvoie toutes les étapes d'une chasse selon son id
+ */
 exports.getChasseSteps = async (req, res) => {
     const {id} = req.params;
     const chasse = await getChasseById(id);
-    console.log(chasse);
     if(!chasse){
         return res.status(404).json({error: 'Chasse not found'});
     }
     res.status(200).json(chasse.steps);
+}
+
+
+/**
+ *
+ * Récupère l'étape step de la chasse id
+ *
+ * */
+exports.getChasseStep = async (req, res) => {
+    const {id,step} = req.params;
+    const chasse = await getChasseById(id);
+    if(!chasse){
+        return res.status(404).json({error: 'Chasse not found'});
+    }
+    const listSteps =chasse.steps;
+    console.log(listSteps);
+    if(listSteps.length < step){
+        return res.status(404).json({error: "Step not found (too High)"});
+    }
+    if(!listSteps[parseInt(step)-1]){
+        return res.status(404).json({error: "Step not found"});
+    }
+
+    return res.status(200).json(listSteps[parseInt(step)-1]);
 }
 
 
@@ -88,6 +115,31 @@ exports.addChasse = async (req, res) => {
 
 
     }catch(err) {
+        res.status(500).json(err);
+    }
+}
+
+
+/*
+Ajoute une etape a une chasse
+ */
+
+exports.addStep = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const objectId = new ObjectId(id);
+        const data = {
+            chasseId: objectId,
+            stepName: req.body.stepName,
+            stepHint: req.body.stepHint,
+            stepCode: req.body.stepCode
+        };
+        const validation = await validateStepData(data);
+        if (validation.status === false) {
+            //update de la chasse
+        }
+
+    }catch (err){
         res.status(500).json(err);
     }
 }
