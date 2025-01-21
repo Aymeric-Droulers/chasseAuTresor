@@ -56,6 +56,19 @@ exports.getChasseSteps = async (req, res) => {
 }
 
 
+/*
+*
+Renvoie toutes les équipes d'une chasse selon son id
+ */
+exports.getChasseTeams = async (req, res) => {
+    const {id} = req.params;
+    const chasse = await getChasseById(id);
+    if(!chasse){
+        return res.status(404).json({error: 'Chasse not found'});
+    }
+    res.status(200).json(chasse.playingTeams);
+}
+
 /**
  *
  * Récupère l'étape step de la chasse id
@@ -68,7 +81,6 @@ exports.getChasseStep = async (req, res) => {
         return res.status(404).json({error: 'Chasse not found'});
     }
     const listSteps =chasse.steps;
-    console.log(listSteps);
     if(listSteps.length < step){
         return res.status(404).json({error: "Step not found (too High)"});
     }
@@ -77,6 +89,26 @@ exports.getChasseStep = async (req, res) => {
     }
 
     return res.status(200).json(listSteps[parseInt(step)-1]);
+}
+
+
+
+
+exports.getChasseTeam = async (req, res) => {
+    const {id,team} = req.params;
+    const chasse = await getChasseById(id);
+    if(!chasse){
+        return res.status(404).json({error: 'Chasse not found'});
+    }
+    const listTeams =chasse.playingTeams;
+    if(listTeams.length < team){
+        return res.status(404).json({error: "Team not found (too High)"});
+    }
+    if(!listTeams[parseInt(team)-1]){
+        return res.status(404).json({error: "Team not found"});
+    }
+
+    return res.status(200).json(listTeams[parseInt(team)-1]);
 }
 
 
