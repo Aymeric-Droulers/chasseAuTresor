@@ -12,6 +12,7 @@
             <label for="Name">Identifiant:</label>
             <br>
             <input id="Name" type="text">
+            <label id="Namealert">Ne mettez pas plus de 64 caractères.</label>
             <br>
             <label for="Password">Mot de passe:</label>
             <br>
@@ -20,12 +21,25 @@
             <label for="Mail">Adresse mail:</label>
             <br>
             <input id="Mail" type="text">
+            <label id="Mailalert">N'oubliez pas de respecter le format, si vous l'avez respecté, le mail tapé a déjà un compte.</label>
+            <label id="Connectalert">Le mail ou mot de passe est incorrect.</label>
             <br>
             <input type="button" value="Se connecter" id="Connect">
             <br>
             <input type="button" value="Créer le compte" id="Signup">
             <br>
         </form>
+        <style>
+            #Namealert{
+                display : none;
+            }
+            #Mailalert{
+                display : none;
+            }
+            #Connectalert{
+                display : none;
+            }
+        </style>
         <script src="accueil.js"></script>
     </body>
 </html>
