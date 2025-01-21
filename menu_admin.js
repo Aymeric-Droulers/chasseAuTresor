@@ -26,6 +26,8 @@ fetch(url, {
         document.getElementById("nb-teams").innerHTML = hunt.nbTeams;
         document.getElementById("people-by-team").innerHTML = hunt.peopleByTeam;
         document.getElementById("place").innerHTML = hunt.place;
+        document.getElementById("random-steps").checked = hunt.randomSteps;
+        document.getElementById("random-departure").checked = hunt.randomDeparture;
 
 
     })
