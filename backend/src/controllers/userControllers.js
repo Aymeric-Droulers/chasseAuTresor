@@ -1,6 +1,6 @@
 const { getDB } = require('../config/db');
 const {ObjectId} = require("mongodb");
-
+const {validateAccountData}=require("../middleware/validateAccountData");
 
 
 exports.getAllUsers = async (req, res) => {
@@ -20,7 +20,6 @@ exports.getUserById = async (req, res) => {
         const DB = await getDB();
         const {id} = req.params;
         const objectId = new ObjectId(id);
-        console.log(id);
         const account = await DB.collection('Accounts').findOne({_id:objectId});
 
         if(!account){
@@ -32,13 +31,14 @@ exports.getUserById = async (req, res) => {
     }
 };
 
+
+
 exports.addAccount = async (req, res) => {
     try {
-        console.log(req);
         const { name,password, mail } = req.body;
-        console.log(req.body);
-        if (!name ||!password|| !mail) {
-            return res.status(400).json({ message: "Le nom et l'email sont requis" });
+        const validation = await validateAccountData(req.body);
+        if(!validation.status){
+            return res.status(400).json({status:false,message:validation.message});
         }
 
         const insertData ={
@@ -50,8 +50,8 @@ exports.addAccount = async (req, res) => {
         }
         const db = getDB();
         const result = await db.collection('Accounts').insertOne(insertData);
-        console.log(result);
-        res.status(201).json({ message: "Utilisateur créé" });
+        console.log("added");
+        res.status(201).json({status:true, message: "Utilisateur créé" });
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: "Erreur serveur", error });
