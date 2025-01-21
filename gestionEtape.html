@@ -9,11 +9,37 @@
             position: relative;
             left: 21.88px;
         }
+
+        #mapForm {
+            position: absolute;
+            left: 320px;
+            top: 26px;
+            width: 500px;
+        }
+
+        #mapShow {
+            max-width: 500px;
+            max-height: 500px;
+            margin: 0px;
+        }
+
+        .points{
+            position: absolute;
+            width: 8px;
+            height: 8px;
+            background-color: red;
+            border-radius: 5px;
+            border-color: black;
+            border-width: 2px;
+            border-style: solid;
+            font-size: 8px;
+            text-align: center;
+        }
     </style>
 </head>
 <body>
     <main>
-        <form>
+        <form id="stepForm">
             <label for="stepName">Nom de l'étape:</label>
             <br>
             <input type="text" id="stepName">
@@ -26,8 +52,18 @@
             <input type="button" value="Valider l'étape" id="validateStep">
             <br>
         </form>
+        <form id="mapForm">
+            <input type="file" value="Ajouter une carte" id="mapInput" accept="image/png, image/jpeg">
+            <br>
+            <br>
+            <input type="button" value="Valider la carte" id="validateMap">
+            <br>
+            <br>
+            <img id="mapShow" src="">
+            <div id="potionD'Invisibilite" style="opacity:0;">Tout les points: <input type="button" value="Changer l'ordre des points" id="changePointsOrder"></div>
+        </form>
         <br>
-        Toutes les Etapes: <input type="button" value="Changer l'ordre des étapes" id="changeOrder">
+        Toutes les Etapes: <input type="button" value="Changer l'ordre des étapes" id="changeStepsOrder">
         <br>
         <table id="tableSteps"></table>
         <br>
