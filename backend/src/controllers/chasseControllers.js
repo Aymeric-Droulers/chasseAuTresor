@@ -1,6 +1,7 @@
 const { getDB } = require('../config/db');
 const {ObjectId} = require("mongodb");
 const{validateChasseData}=require('../middleware/validateChasseData');
+const {getChasseById} = require("../utils/getChasseById");
 
 
 
@@ -29,11 +30,8 @@ exports.getAllChasses = async (req, res) => {
 
 exports.getChasseById=async (req, res) => {
     try {
-        const DB = await getDB();
         const {id} = req.params;
-        const objectId = new ObjectId(id);
-        const chasse = await DB.collection('Chasses').findOne({_id:objectId});
-
+        const chasse = await getChasseById(id);
         if(!chasse){
             return res.status(404).json({error: 'Chasse not found'});
         }
@@ -44,12 +42,23 @@ exports.getChasseById=async (req, res) => {
 }
 
 
+exports.getChasseSteps = async (req, res) => {
+    const {id} = req.params;
+    const chasse = await getChasseById(id);
+    console.log(chasse);
+    if(!chasse){
+        return res.status(404).json({error: 'Chasse not found'});
+    }
+    res.status(200).json(chasse.steps);
+}
+
+
 /*
 * Ajoute une chasse avec les infos de base
 * */
 exports.addChasse = async (req, res) => {
     try{
-        const {accessCode,name,nbTeams,peopleByTeam,startDate,duration,theme,place,randomDeparture,randomSteps}= req.body;
+        const {accessCode,name,nbTeams,peopleByTeam,startDate,duration,themes,place,randomDeparture,randomSteps}= req.body;
         const validation = validateChasseData(req.body);
 
         if(validation.status === false){
@@ -63,7 +72,7 @@ exports.addChasse = async (req, res) => {
             "peopleByTeam":peopleByTeam,
             "startDate":startDate,
             "duration":duration,
-            "themes":theme,
+            "themes":themes,
             "accessCode":accessCode,
             "place":place,
             "mapFile":"",
