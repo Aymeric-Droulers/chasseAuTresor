@@ -38,7 +38,7 @@ function DoSignup(){
             console.log('Réponse reçue:', exit);
             console.log(Namealert.style.display);
             if(Namealert.style.display == "none" && Mailalert.style.display == "none") {
-            window.location.assign('defaut.html');
+            window.location.assign('accueil.html');
             }
         })
         .catch(error => {
@@ -67,7 +67,7 @@ function DoConnect(){
     
             // Utiliser total dans la boucle
             if(Name == total["name"] && Password == total["password"] && Connectalert.style.display == "none"){
-                window.location.assign('defaut.html');
+                window.location.assign('accueil.html');
             }
         } catch (error) {
             console.error('Erreur lors de la requête:', error);
