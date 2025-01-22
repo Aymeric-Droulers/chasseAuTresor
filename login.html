@@ -1,45 +1,51 @@
 <!DOCTYPE html>
 <html>
-    <head>
-        <meta charset=utf-8>
-        <title>LOGIN</title>
-        <style>
-        
-        </style>
-    </head>
-    <body id="body">
+
+<head>
+    <meta charset=utf-8>
+    <title>LOGIN</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body id="body">
+    <div id="form-container">
         <form id="form">
+            <h2>S'inscrire / Se connecter</h2>
             <label for="Name">Identifiant:</label>
-            <br>
             <input id="Name" type="text">
             <label id="Namealert">Ne mettez pas plus de 64 caractères.</label>
-            <br>
+
             <label for="Password">Mot de passe:</label>
-            <br>
-            <input id="Password" type="text">
-            <br>
+            <input id="Password" type="password">
+
             <label for="Mail">Adresse mail:</label>
-            <br>
             <input id="Mail" type="text">
-            <label id="Mailalert">N'oubliez pas de respecter le format, si vous l'avez respecté, le mail tapé a déjà un compte.</label>
+            <label id="Mailalert">Respectez le format. Sinon, le mail existe déjà.</label>
             <label id="Connectalert">Le mail ou mot de passe est incorrect.</label>
-            <br>
-            <input type="button" value="Se connecter" id="Connect">
-            <br>
-            <input type="button" value="Créer le compte" id="Signup">
-            <br>
+            <div class="bouton">
+                <input type="button" value="Se connecter" id="Connect">
+                <input type="button" value="Créer le compte" id="Signup">
+            </div>
         </form>
-        <style>
-            #Namealert{
-                display : none;
-            }
-            #Mailalert{
-                display : none;
-            }
-            #Connectalert{
-                display : none;
-            }
-        </style>
-        <script src="login.js"></script>
-    </body>
+        <div class="image-container">
+            <img src="../images/logo.png" alt="Illustration">
+        </div>
+    </div>
+</body>
+
+<style>
+    #Namealert {
+        display: none;
+    }
+
+    #Mailalert {
+        display: none;
+    }
+
+    #Connectalert {
+        display: none;
+    }
+</style>
+<script src="login.js"></script>
+
 </html>
