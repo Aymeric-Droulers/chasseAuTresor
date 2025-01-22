@@ -21,13 +21,13 @@ document.querySelector('form').addEventListener('submit', async function(event) 
     }
 
     // Check if the number of teams is a positive number
-    if (data['nbTeams'] < 0 || isNaN(data['nbTeams'])) {
-        alert('Le nombre d\'équipes ne peut pas être inférieur à 0');
+    if (data['nbTeams'] < 1 || isNaN(data['nbTeams'])) {
+        alert('Le nombre d\'équipes ne peut pas être inférieur à 1');
         return;
     }
     // Check if the number of members is a positive number
-    if (data['peopleByTeam'] < 0 || isNaN(data['peopleByTeam'])) {
-        alert('Le nombre de membres par équipe ne peut pas être inférieur à 0');
+    if (data['peopleByTeam'] < 1 || isNaN(data['peopleByTeam'])) {
+        alert('Le nombre de membres par équipe ne peut pas être inférieur à 1');
         return;
     }
 
@@ -87,6 +87,7 @@ document.querySelector('form').addEventListener('submit', async function(event) 
     .catch(error => {
         console.error('Erreur lors de la requête :', error);
     });
+    window.location.assign("menu_admin.html");
 });
 
 document.getElementById('auto-fill').addEventListener('click', function() {
