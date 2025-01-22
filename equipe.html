@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Team Creation</title>
+    <link rel="stylesheet" href="equipe.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Section de création d'équipe -->
+        <section id="create-section" class="create-section">
+            <h1>Create Your Team</h1>
+            <div id="customTeamForm">
+                <div class="form-group">
+                    <label for="teamName">Team Name:</label>
+                    <input type="text" id="teamName" placeholder="Enter team name">
+                </div>
+                <div class="form-group">
+                    <label for="teamCode">Access Code (4 digits):</label>
+                    <input type="text" id="teamCode" placeholder="Enter 4-digit access code">
+                </div>
+                <button id="createTeamButton">Create Team</button>
+            </div>
+        </section>
+
+        <!-- Section des équipes créées -->
+        <section id="teams-section" class="teams-section">
+            <h2>Teams Created</h2>
+            <div class="team-list" id="teamList"></div>
+        </section>
+
+        <!-- Section pour rejoindre une équipe -->
+        <div id="join-section" class="overlay-form" style="display: none;">
+            <div class="form-container">
+                <h2>Join Team: <span id="teamNameDisplay"></span></h2>
+                <div class="form-group">
+                    <label for="firstName">First Name:</label>
+                    <input type="text" id="firstName" placeholder="Enter your first name">
+                </div>
+                <div class="form-group">
+                    <label for="lastName">Last Name:</label>
+                    <input type="text" id="lastName" placeholder="Enter your last name">
+                </div>
+                <div class="form-group">
+                    <label for="enteredCode">Access Code:</label>
+                    <input type="text" id="enteredCode" placeholder="Enter the access code">
+                </div>
+                <button id="submitJoinButton">Join</button>
+                <button id="cancelJoinButton">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <script src="equipe.js"></script>
+</body>
+</html>
