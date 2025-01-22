@@ -3,7 +3,9 @@ const {ObjectId} = require("mongodb");
 const{validateChasseData}=require('../middleware/validateChasseData');
 const {getChasseById} = require("../utils/getChasseById");
 const {validateStepData} = require("../middleware/validateStepData");
-
+const {getTeamInChasseByNumber} = require("../middleware/getTeamInChasseByNumber");
+const {getAccountById} = require("../utils/getAccountById");
+const {getPlayerListFromChasseAndNumTeam} = require("../middleware/getPlayerListFromChasseAndNumTeam");
 
 
 /*
@@ -24,9 +26,7 @@ exports.getAllChasses = async (req, res) => {
 
 
 /*
-*
 * Récupère la chasse possédant l'id id
-*
 * */
 
 exports.getChasseById=async (req, res) => {
@@ -96,19 +96,11 @@ exports.getChasseStep = async (req, res) => {
 
 exports.getChasseTeam = async (req, res) => {
     const {id,team} = req.params;
-    const chasse = await getChasseById(id);
-    if(!chasse){
-        return res.status(404).json({error: 'Chasse not found'});
+    const result =await getTeamInChasseByNumber(id,team);
+    if(result.status===false){
+        return res.status(400).json({error: result.error});
     }
-    const listTeams =chasse.playingTeams;
-    if(listTeams.length < team){
-        return res.status(404).json({error: "Team not found (too High)"});
-    }
-    if(!listTeams[parseInt(team)-1]){
-        return res.status(404).json({error: "Team not found"});
-    }
-
-    return res.status(200).json(listTeams[parseInt(team)-1]);
+    return res.status(200).json(result.content);
 }
 
 
@@ -247,4 +239,45 @@ exports.addStep = async (req, res) => {
     }catch (err){
         res.status(500).json(err);
     }
+}
+
+
+/*
+* récupère la liste des joueurs et leurs données
+* */
+
+exports.getPlayerList = async (req, res) => {
+    try {
+        const {id, team} = req.params;
+        const resultat =await getPlayerListFromChasseAndNumTeam(id,team);
+
+        if(!resultat.status){
+            return res.status(400).json({message:resultat.message});
+        }else{
+            return res.status(200).json(resultat.content);
+        }
+
+    }catch (err){
+        res.status(500).json(err);
+    }
+
+}
+
+
+exports.getPlayerInPlayerList = async (req, res) => {
+    const {id, team,player} = req.params;
+    const resultat =await getPlayerListFromChasseAndNumTeam(id,team);
+    if(!resultat.status){
+        return res.status(400).json({message:resultat.message});
+    }else{
+        const playerList = resultat.content;
+        if(playerList.length < player){
+            return res.status(404).json({message:"Player not found (Too high)"});
+        }
+        if(!playerList[player-1]){
+            return res.status(404).json({message:"Player not found"});
+        }
+        return res.status(200).json(playerList[player-1]);
+    }
+
 }

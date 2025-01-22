@@ -40,7 +40,10 @@
 </head>
 <body>
 <div class="container">
-    <h1 id>Gestion de la chasse au trésor</h1>
+    <h1>Gestion de la chasse au trésor</h1>
+    <p><strong>Chasse sélectionnée :</strong>
+        <select id="hunt-select" name="hunt-select"></select>
+    </p>
     <h2>Informations sur la chasse</h2>
     <p><strong>Nom de la chasse:</strong> <span id="hunt-name"></span></p>
     <p><strong>Nombre d'équipes:</strong> <span id="nb-teams"></span></p>
@@ -50,8 +53,8 @@
     <p><strong>Lieu:</strong> <span id="place"></span></p>
     <p><strong>Code d'accès:</strong> <span id="access-code"></span></p>
     <p><strong>Thèmes:</strong> <span id="themes"></span></p>
-    <p><strong>Étapes aléatoires:</strong> <input type="checkbox" id="random-steps" disabled></p>
-    <p><strong>Départ aléatoire:</strong> <input type="checkbox" id="random-departure" disabled></p>
+    <p><strong>Étapes aléatoires:</strong> <label id="random-steps"></label></p>
+    <p><strong>Départ aléatoire:</strong> <label id="random-departure"></label></p>
 
 
     <button class="button" id="edit-hunt">Modifier chasse</button>

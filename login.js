@@ -1,17 +1,10 @@
-/*const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-};*/
-
 var Connect = document.getElementById("Connect");
 var Signup = document.getElementById("Signup");
 Signup.addEventListener("click",DoSignup);
 Connect.addEventListener("click",DoConnect);
 var Namealert = document.getElementById("Namealert");
 var Mailalert = document.getElementById("Mailalert");
+var total;
 
 function DoSignup(){
 
@@ -25,7 +18,6 @@ function DoSignup(){
     data["name"] = Name;
     data["password"] = Password;
     data["mail"] = Mail;
-    var total;
         const options = {
             method: 'POST',
             headers: {
@@ -46,7 +38,7 @@ function DoSignup(){
             console.log('Réponse reçue:', exit);
             console.log(Namealert.style.display);
             if(Namealert.style.display == "none" && Mailalert.style.display == "none") {
-            window.location.assign('defaut.html');
+            window.location.assign('accueil.html');
             }
         })
         .catch(error => {
@@ -75,7 +67,7 @@ function DoConnect(){
     
             // Utiliser total dans la boucle
             if(Name == total["name"] && Password == total["password"] && Connectalert.style.display == "none"){
-                window.location.assign('defaut.html');
+                window.location.assign('accueil.html');
             }
         } catch (error) {
             console.error('Erreur lors de la requête:', error);

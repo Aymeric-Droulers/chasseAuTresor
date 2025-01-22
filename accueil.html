@@ -11,15 +11,43 @@
 <body>
     <header class="header">
         <div class="logo-title">
-            <img src="../images/logo.png" alt="Logo Lockéo" class="logo">
+            <img src="images/logo.png" alt="Logo Lockéo" class="logo">
             <h1 class="header-title">LOCKÉO</h1>
         </div>
         <nav class="nav-links">
-            <a href="creer-evenement.html" class="nav-link">Créer son événement</a>
-            <a href="evenements-alentours.html" class="nav-link">Événements aux alentours</a>
+            <a href="formulaire.html" class="nav-link">Créer sa chasse</a>
+            <a href="listing.html" class="nav-link">Chasses aux alentours</a>
             <a href="historique.html" class="nav-link">Historique</a>
+           
+
+            <button id="logoutBtn">Se déconnecter</button>
+            <script>
+              document.getElementById('logoutBtn').addEventListener('click', async () => {
+                fetch('http://localhost:3000/api/logout', {
+                  method: 'POST',
+                  credentials: 'include'  // IMPORTANT : envoie le cookie
+                })
+                .then(response => {
+                  if (response.ok) return response.json();
+                  throw new Error('Erreur lors de la déconnexion');
+                })
+                .then(data => {
+                  alert(data.message); // ex: “Déconnecté !”
+                  window.location.href = 'login.html';
+                })
+                .catch(err => {
+                  alert(err.message);
+                });
+              });
+            </script>
+
         </nav>
-        <img src="../images/connexion.png" alt="Connexion" class="login-logo">
+        <img src="images/connexion.png" alt="Connexion" class="login-logo" id="Connexion">
+        <script>
+            Connexion = document.getElementById("Connexion");
+            function connect(){window.location.assign('login.html');}
+            Connexion.addEventListener("click", connect);
+        </script>
     </header>
     <main class="main-content">
         <div class="desc">
@@ -31,7 +59,7 @@
         </div>
         <div class="description">
             <span class="highlighted">Chaque aventure est un trésor à découvrir !</span><br>
-            <img src="../images/logo.png" alt="Logo Lockéo" class="logo">
+            <img src="images/logo.png" alt="Logo Lockéo" class="logo">
             <div class="descri">
                 Bienvenue sur Lockéo, votre plateforme dédiée à l'organisation de chasses aux trésors immersives et
                 éducatives.
@@ -39,7 +67,7 @@
                 captivante,
                 Lockéo transforme chaque lieu en terrain d’aventure.
                 <div class="event-button-container">
-                    <a href="evenements-alentours.html" class="event-button">Voir les événements aux alentours</a>
+                    <a href="evenements-alentours.html" class="event-button">Voir les chasses aux alentours</a>
                 </div>
             </div>
         </div>
@@ -51,7 +79,7 @@
                 <p>Votre plateforme dédiée à l'organisation de chasses aux trésors immersives et éducatives.</p>
             </div>
             <div class="footer-section links">
-                <img src="../images/logo.png" alt="Logo Lockéo" class="logofooter">
+                <img src="images/logo.png" alt="Logo Lockéo" class="logofooter">
             </div>
             <div class="footer-section contact">
                 <h3>Contactez-nous</h3>
