@@ -281,3 +281,50 @@ exports.getPlayerInPlayerList = async (req, res) => {
     }
 
 }
+
+
+
+exports.addPlayer = async (req, res) => {
+    let{id,team}=req.params;
+    const{playerId}=req.body;
+    const idObject= new ObjectId(id)
+
+    //verifications existence chasse et équipe
+    const chasse=await getChasseById(id);
+    if(!chasse){
+        return res.status(404).json({message:"Chasse not found"});
+    }
+
+    const teamData = await getTeamInChasseByNumber(idObject,team);
+    if(!teamData.status){
+        return res.status(404).json({message:"Team not found"});
+    }
+
+    //verification joueur pas déja inscrit
+
+    const playerList = (await getTeamInChasseByNumber(idObject,team)).content.teamPlayersIds;
+    console.log(playerList);
+    console.log(team);
+    if(playerList.includes(playerId)){
+        return res.status(400).json({message:"This player is already in a team"});
+    }
+    playerList.push(playerId);
+    const db = getDB();
+    team=parseInt(team);
+
+    const result = await db.collection('Chasses').updateOne(
+        { _id: idObject, "playingTeams.teamId": team }, // Filtrer par ID et équipe
+        { $set: { "playingTeams.$.teamPlayersIds": playerList } } // Met à jour la bonne équipe
+    );
+
+
+    if (result.modifiedCount === 0) {
+        return res.status(500).json({ message: "Failed to add player to the team" });
+    }
+    console.log("player added");
+    res.status(201).json({status:true, message: "Joueur ajoutée" });
+
+
+
+
+}

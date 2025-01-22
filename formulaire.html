@@ -23,15 +23,15 @@
     </header>
     <div class="form1">
         <form class="form1" action="/submit" method="post">
-            <h1>Formulaire de création de chasse au trésor</h1>
+            <h1>Formulaire de création de chasse</h1>
             <label for="name">Nom de la chasse</label>
             <input type="text" id="name" name="name" required><br><br>
 
             <label for="nbTeams">Nombre d'équipes</label>
-            <input type="number" id="nbTeams" name="nbTeams" min="0" required><br><br>
+            <input type="number" id="nbTeams" name="nbTeams" min="1" required><br><br>
 
             <label for="peopleByTeam">Nombre de membres par équipe</label>
-            <input type="number" id="peopleByTeam" name="peopleByTeam" min="0" required><br><br>
+            <input type="number" id="peopleByTeam" name="peopleByTeam" min="1" required><br><br>
 
             <label for="startDate">Date et heure de début</label>
             <input type="datetime-local" id="startDate" name="startDate" required><br><br>
