@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset=utf-8>
+    <title>LOGIN</title>
+    <link rel="stylesheet" href="login.css">
+</head>
+
+<body id="body">
+    <div id="form-container">
+        <form id="form">
+            <h2>S'inscrire / Se connecter</h2>
+            <label for="Name">Identifiant:</label>
+            <input id="Name" type="text">
+            <label id="Namealert">Ne mettez pas plus de 64 caractères.</label>
+
+            <label for="Password">Mot de passe:</label>
+            <input id="Password" type="password">
+
+            <label for="Mail">Adresse mail:</label>
+            <input id="Mail" type="text">
+            <label id="Mailalert">Respectez le format. Sinon, le mail existe déjà.</label>
+            <label id="Connectalert">Le mail ou mot de passe est incorrect.</label>
+            <div class="bouton">
+                <input type="button" value="Se connecter" id="Connect">
+                <input type="button" value="Créer le compte" id="Signup">
+            </div>
+        </form>
+        <div class="image-container">
+            <img src="../images/logo.png" alt="Illustration">
+        </div>
+    </div>
+</body>
+
+<style>
+    #Namealert {
+        display: none;
+    }
+
+    #Mailalert {
+        display: none;
+    }
+
+    #Connectalert {
+        display: none;
+    }
+</style>
+<script src="login.js"></script>
+
+</html>
