@@ -3,7 +3,9 @@ const {ObjectId} = require("mongodb");
 const{validateChasseData}=require('../middleware/validateChasseData');
 const {getChasseById} = require("../utils/getChasseById");
 const {validateStepData} = require("../middleware/validateStepData");
-
+const {getTeamInChasseByNumber} = require("../middleware/getTeamInChasseByNumber");
+const {getAccountById} = require("../utils/getAccountById");
+const {getPlayerListFromChasseAndNumTeam} = require("../middleware/getPlayerListFromChasseAndNumTeam");
 
 
 /*
@@ -24,9 +26,7 @@ exports.getAllChasses = async (req, res) => {
 
 
 /*
-*
 * Récupère la chasse possédant l'id id
-*
 * */
 
 exports.getChasseById=async (req, res) => {
@@ -96,19 +96,11 @@ exports.getChasseStep = async (req, res) => {
 
 exports.getChasseTeam = async (req, res) => {
     const {id,team} = req.params;
-    const chasse = await getChasseById(id);
-    if(!chasse){
-        return res.status(404).json({error: 'Chasse not found'});
+    const result =await getTeamInChasseByNumber(id,team);
+    if(result.status===false){
+        return res.status(400).json({error: result.error});
     }
-    const listTeams =chasse.playingTeams;
-    if(listTeams.length < team){
-        return res.status(404).json({error: "Team not found (too High)"});
-    }
-    if(!listTeams[parseInt(team)-1]){
-        return res.status(404).json({error: "Team not found"});
-    }
-
-    return res.status(200).json(listTeams[parseInt(team)-1]);
+    return res.status(200).json(result.content);
 }
 
 
@@ -153,6 +145,52 @@ exports.addChasse = async (req, res) => {
 
 
 /*
+ Modifie une chasse avec les infos de base
+* */
+exports.editChasse = async (req, res) => {
+    try{
+        const {accessCode,name,nbTeams,peopleByTeam,startDate,duration,themes,place,randomDeparture,randomSteps}= req.body;
+        const {id} = req.params;
+        const validation = validateChasseData(req.body);
+
+        if(validation.status === false){
+            return res.status(400).json({status:false,message:validation.message});
+        }
+        const chasse = await getChasseById(id);
+        console.log(chasse)
+        if(!chasse){
+            return res.status(404).json({error: 'Chasse not found'});
+        }
+
+        const updateData = {
+            "name": name,
+            "nbTeams":nbTeams,
+            "peopleByTeam":peopleByTeam,
+            "startDate":startDate,
+            "duration":duration,
+            "themes":themes,
+            "accessCode":accessCode,
+            "place":place,
+            "randomDeparture":randomDeparture,
+            "randomSteps":randomSteps,
+        }
+        const objectId = new ObjectId(id);
+        const db = getDB();
+        const result = await db.collection('Chasses').updateOne(
+            {_id:objectId},
+            {$set:updateData}
+        );
+        console.log(result);
+        res.status(201).json({status:true, message: "Chasse mis a jour" });
+
+
+    }catch(err) {
+        res.status(500).json(err);
+    }
+}
+
+
+/*
 Ajoute une etape a une chasse
  */
 
@@ -165,7 +203,8 @@ exports.addStep = async (req, res) => {
             chasseId: objectId,
             stepName: req.body.stepName,
             stepHint: req.body.stepHint,
-            stepCode: req.body.stepCode
+            stepCode: req.body.stepCode,
+            points:req.body.points,
         };
 
 
@@ -179,7 +218,8 @@ exports.addStep = async (req, res) => {
             stepId:lastId+1,
             stepName:req.body.stepName,
             stepHint:req.body.stepHint,
-            stepCode:req.body.stepCode
+            stepCode:req.body.stepCode,
+            points:req.body.points
         })
 
         if (!validation.success) {
@@ -200,3 +240,27 @@ exports.addStep = async (req, res) => {
         res.status(500).json(err);
     }
 }
+
+
+/*
+* récupère la liste des joueurs et leurs données
+* */
+
+exports.getPlayerList = async (req, res) => {
+    try {
+        const {id, team} = req.params;
+        const resultat =await getPlayerListFromChasseAndNumTeam(id,team);
+
+        if(!resultat.status){
+            return res.status(400).json({message:resultat.message});
+        }else{
+            return res.status(200).json(resultat.content);
+        }
+
+    }catch (err){
+        res.status(500).json(err);
+    }
+
+}
+
+
