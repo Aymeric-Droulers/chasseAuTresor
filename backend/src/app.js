@@ -48,9 +48,12 @@ app.use('/api', userRoutes);
 app.use('/api', routes);
 
 // 6. Servir le dossier "chasseautresor" (où se trouve accueil.html, etc.)
+app.use(express.static(path.join(__dirname, '../chasseautresor')));
+
 app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, '../chasseautresor/accueil.html'));
 });
+
 
 
 module.exports = app;
