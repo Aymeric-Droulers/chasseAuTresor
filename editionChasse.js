@@ -138,6 +138,6 @@ document.querySelector('form').addEventListener('submit', async function(event) 
     window.location.href = `menu_admin.html`;
 });
 
-document.getElementById('auto-fill').addEventListener('click', function() {
+document.getElementById('back').addEventListener('click', function() {
     window.location.href = `menu_admin.html`;
 });
