@@ -1,10 +1,51 @@
+let url="http://localhost:3000/api/chasses"
+
+const urlParams = new URLSearchParams(window.location.search);
+const huntId = urlParams.get('hunt_id');
+if (!huntId) {
+    window.location.href = `menu_admin.html`;
+}
+
+fetch(url, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+})
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP : ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(hunts => {
+        hunts.forEach(hunt => {
+            if (hunt._id === huntId) {
+                console.log(hunt);
+                document.getElementById('name').value = hunt.name;
+                document.getElementById('nbTeams').value = hunt.nbTeams;
+                document.getElementById('peopleByTeam').value = hunt.peopleByTeam;
+                const date = new Date(hunt.startDate);
+                date.setMinutes(date.getMinutes() - date.getTimezoneOffset());
+                document.getElementById('startDate').value = date.toISOString().slice(0,16);
+                document.getElementById('duration_hours').value = Math.floor(hunt.duration/60)
+                document.getElementById('duration_minutes').value = hunt.duration%60;
+                document.getElementById('accessCode').value = hunt.accessCode;
+                document.getElementById('randomDeparture').checked = hunt.randomDeparture;
+                document.getElementById('place').value = hunt.place;
+                document.getElementById("randomSteps").checked = hunt.randomSteps;
+                if (hunt.themes.length > 0) {
+                    document.getElementById("themes").value = hunt.themes.join(',');
+                }
+            }
+        })
+    })
+    .catch(error => {
+        console.error('Erreur lors de la requête :', error);
+    });
+
 
 document.querySelector('form').addEventListener('submit', async function(event) {
-
-    const urlParams = new URLSearchParams(window.location.search);
-
-    const huntId = urlParams.get('hunt_id');
-    console.log(huntId);
 
     event.preventDefault(); // Empêche l'envoi du formulaire
 
@@ -73,9 +114,10 @@ document.querySelector('form').addEventListener('submit', async function(event) 
 
     console.log(data);
 
-    const url = `http://localhost:3000/api/chasses/${huntId}/editChasse`;
+    const url = `http://localhost:3000/api/chasses/${huntId}/edit`;
+    console.log(url);
     fetch(url, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
             'Content-Type': 'application/json'
         },
@@ -93,18 +135,9 @@ document.querySelector('form').addEventListener('submit', async function(event) 
         .catch(error => {
             console.error('Erreur lors de la requête :', error);
         });
+    window.location.href = `menu_admin.html`;
 });
 
-document.getElementById('auto-fill').addEventListener('click', function() {
-    document.getElementById('name').value = 'Chasse au trésor test';
-    document.getElementById('nbTeams').value = 5;
-    document.getElementById('peopleByTeam').value = 4;
-    document.getElementById('startDate').value = '2025-12-31T12:00';
-    document.getElementById('duration_hours').value = 2;
-    document.getElementById('duration_minutes').value = 30;
-    document.getElementById('accessCode').value = 'TEST1234';
-    document.getElementById('randomDeparture').checked = true;
-    document.getElementById('place').value = "Arras";
-    document.getElementById("randomSteps").checked = true;
-    document.getElementById("themes").value = "Médiéval,Difficile,Aventure";
+document.getElementById('back').addEventListener('click', function() {
+    window.location.href = `menu_admin.html`;
 });
