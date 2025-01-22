@@ -89,6 +89,10 @@ fetch(url, {
         tableClassement.appendChild(tmpTableClassement[indexOfMax(nbStepsCompleted)]);
         nbStepsCompleted[indexOfMax(nbStepsCompleted)] = -1;
     }
+
+    for (let i = 1; i < tableClassement.children.length; i++) {
+        tableClassement.children[i].children[0].innerText = i;
+    }
 })
 .catch(error => {
     console.error('Erreur lors de la requête :', error);
