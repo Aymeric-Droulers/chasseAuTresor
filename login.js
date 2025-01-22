@@ -1,17 +1,10 @@
-/*const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify(data)
-};*/
-
 var Connect = document.getElementById("Connect");
 var Signup = document.getElementById("Signup");
 Signup.addEventListener("click",DoSignup);
 Connect.addEventListener("click",DoConnect);
 var Namealert = document.getElementById("Namealert");
 var Mailalert = document.getElementById("Mailalert");
+var total;
 
 function DoSignup(){
 
@@ -25,7 +18,6 @@ function DoSignup(){
     data["name"] = Name;
     data["password"] = Password;
     data["mail"] = Mail;
-    var total;
         const options = {
             method: 'POST',
             headers: {
