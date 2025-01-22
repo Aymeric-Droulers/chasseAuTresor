@@ -42,7 +42,12 @@
             </script>
 
         </nav>
-        <img src="images/connexion.png" alt="Connexion" class="login-logo">
+        <img src="images/connexion.png" alt="Connexion" class="login-logo" id="Connexion">
+        <script>
+            Connexion = document.getElementById("Connexion");
+            function connect(){window.location.assign('login.html');}
+            Connexion.addEventListener("click", connect);
+        </script>
     </header>
     <main class="main-content">
         <div class="desc">
