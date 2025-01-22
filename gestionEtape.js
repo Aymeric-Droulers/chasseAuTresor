@@ -11,6 +11,7 @@ var mapOutput = document.getElementById("mapShow");
 var buttonPointsChangeOrder = document.getElementById("changePointsOrder");
 var arnaque = document.getElementById("potionD'Invisibilite");
 var validationAll = document.getElementById("validateAll");
+var validationError = document.getElementById("errorBox");
 var listSteps = [];
 var listPointsMap = [];
 var listDeletes = [];
@@ -326,35 +327,47 @@ function deleteStep() {
 }
 
 function sendToDB() {
-    const url = "http://localhost:3000/api/chasses/0/addStep";
-    var data = {};
-    data["steps"] = [];
-    data["steps"].push({});
-    //data["map"] = mapOutput.src;
-    for (let i = 0; i < listSteps.length; i++) {
-        console.log(data);
-        data["steps"][0]["stepId"] = i;
-        data["steps"][0]["stepName"] = listSteps[i][0];
-        data["steps"][0]["stepHint"] = listSteps[i][1];
-        data["steps"][0]["points"] = listPointsMap[i];
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP : ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Réponse du serveur :', data);
-        })
-        .catch(error => {
-            console.error('Erreur lors de la requête :', error);
-        });
+    var allValid = true;
+    if (listSteps.length != listPointsMap.length && placingPoints) {
+        console.log(1);
+        validationError.innerText = "Il manque des points pour valider.";
+        allValid = false;
+    }
+    else if (listSteps.length == 0) {
+        validationError.innerText = "Il faut au moins une étape pour valider."
+    }
+
+    if (allValid) {
+        const url = "http://localhost:3000/api/chasses/0/addStep";
+        var data = {};
+        data["steps"] = [];
+        data["steps"].push({});
+        //data["map"] = mapOutput.src;
+        for (let i = 0; i < listSteps.length; i++) {
+            console.log(data);
+            data["steps"][0]["stepId"] = i;
+            data["steps"][0]["stepName"] = listSteps[i][0];
+            data["steps"][0]["stepHint"] = listSteps[i][1];
+            data["steps"][0]["points"] = listPointsMap[i];
+            fetch(url, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data),
+            })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(data => {
+                console.log('Réponse du serveur :', data);
+            })
+            .catch(error => {
+                console.error('Erreur lors de la requête :', error);
+            });
+        }
     }
 }
