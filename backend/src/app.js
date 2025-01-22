@@ -5,7 +5,7 @@ const session = require('express-session');
 const path = require('path');
 const { connectDB } = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
-
+const routes = require('./routes/routes');
 const app = express();
 
 // 1. Connexion BDD
@@ -18,7 +18,7 @@ app.use(express.json());
 //    Choisis l'URL EXACTE où tu ouvres ton front.
 //    Si tu ouvres http://localhost:5500/accueil.html, alors :
 app.use(cors({
-  origin: 'http://localhost:5500',  
+  origin: '*',
   methods: ['GET','POST','PUT','DELETE'],
   credentials: true 
 }));
@@ -45,6 +45,7 @@ app.use(session({
 
 // 5. Brancher tes routes
 app.use('/api', userRoutes);
+app.use('/api', routes);
 
 // 6. Servir le dossier "chasseautresor" (où se trouve accueil.html, etc.)
 app.use(express.static(path.join(__dirname, '../chasseautresor')));
