@@ -2,6 +2,9 @@ let url="http://localhost:3000/api/chasses"
 
 const urlParams = new URLSearchParams(window.location.search);
 const huntId = urlParams.get('hunt_id');
+if (!huntId) {
+    window.location.href = `menu_admin.html`;
+}
 
 fetch(url, {
     method: 'GET',
@@ -16,7 +19,6 @@ fetch(url, {
         return response.json();
     })
     .then(hunts => {
-        console.log(hunts);
         hunts.forEach(hunt => {
             if (hunt._id === huntId) {
                 console.log(hunt);
@@ -115,7 +117,7 @@ document.querySelector('form').addEventListener('submit', async function(event) 
     const url = `http://localhost:3000/api/chasses/${huntId}/edit`;
     console.log(url);
     fetch(url, {
-        method: 'PUT',
+        method: "PUT",
         headers: {
             'Content-Type': 'application/json'
         },
@@ -137,15 +139,5 @@ document.querySelector('form').addEventListener('submit', async function(event) 
 });
 
 document.getElementById('auto-fill').addEventListener('click', function() {
-    document.getElementById('name').value = 'Chasse au trésor test';
-    document.getElementById('nbTeams').value = 5;
-    document.getElementById('peopleByTeam').value = 4;
-    document.getElementById('startDate').value = '2025-12-31T12:00';
-    document.getElementById('duration_hours').value = 2;
-    document.getElementById('duration_minutes').value = 30;
-    document.getElementById('accessCode').value = 'TEST1234';
-    document.getElementById('randomDeparture').checked = true;
-    document.getElementById('place').value = "Arras";
-    document.getElementById("randomSteps").checked = true;
-    document.getElementById("themes").value = "Médiéval,Difficile,Aventure";
+    window.location.href = `menu_admin.html`;
 });
