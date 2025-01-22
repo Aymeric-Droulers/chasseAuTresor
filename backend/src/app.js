@@ -18,7 +18,7 @@ app.use(express.json());
 //    Choisis l'URL EXACTE où tu ouvres ton front.
 //    Si tu ouvres http://localhost:5500/accueil.html, alors :
 app.use(cors({
-  origin: 'http://localhost:5500',  
+  origin: '*',
   methods: ['GET','POST','PUT','DELETE'],
   credentials: true 
 }));
