@@ -102,7 +102,7 @@ body {
 .desc {
     height: 500px;
     background: linear-gradient(rgba(191, 128, 64, 0.6), rgba(191, 128, 64, 0.6)), 
-                url('images/fond.jpg') no-repeat center center/cover;
+                url('../images/fond.jpg') no-repeat center center/cover;
 }
 
 .description {
@@ -208,3 +208,51 @@ body {
 .logofooter {
     height: 100px;
 }
+
+
+.elemHisto {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    grid-template-rows: repeat(6, 1fr);
+    grid-column-gap: 0px;
+    grid-row-gap: 0px;
+    height: 200px;
+    text-align: justify;
+    width: 50%;
+    margin: auto;
+    margin-bottom: 50px;
+}
+
+.dateChasseHisto{
+    grid-area: 1 / 1 / 2 / 3; 
+    text-align: center;
+    padding: 5px;
+    font-size: 25px;
+    font-weight: bold;
+}
+.nomChasse { grid-area: 2 / 1 / 3 / 2; }
+.nomEquipe { grid-area: 3 / 1 / 4 / 2; }
+.classementHisto { grid-area: 4 / 1 / 5 / 2; }
+.tempsHisto { grid-area: 5 / 1 / 6 / 2; }
+.placeHisto { grid-area: 6 / 1 / 7 / 2; }
+.mapHisto { 
+    grid-area: 2 / 2 / 7 / 3; 
+    height: inherit;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
