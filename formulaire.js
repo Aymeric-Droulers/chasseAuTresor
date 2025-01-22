@@ -1,14 +1,14 @@
-ok = true;
+
 document.querySelector('form').addEventListener('submit', async function(event) {
     event.preventDefault(); // Empêche l'envoi du formulaire
-    
+
     const formData = new FormData(event.target);
 
     const data = {};
     formData.forEach((value, key) => {
         data[key] = value;
     });
-    
+
     data['duration_hours'] = parseInt(data['duration_hours']);
     data['duration_minutes'] = parseInt(data['duration_minutes']);
     data['nbTeams'] = parseInt(data['nbTeams']);
@@ -20,33 +20,6 @@ document.querySelector('form').addEventListener('submit', async function(event) 
         return;
     }
 
-    //check if the access code isn't use
-    async function fetchDataAndProcess() {
-        try {
-            const response = await fetch("http://localhost:3000/api/chasses");
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            const total = await response.json(); // Assigner directement les données
-    
-            // Utiliser total dans la boucle
-            for(let i=0; i<total.length; i++){
-                if(data["accessCode"] == total[i]["accessCode"]){
-                    ok = false;
-                    alert('Le code d accès existe déjà.')
-                    return;
-                }
-            }
-        } catch (error) {
-            console.error('Erreur lors de la requête:', error);
-        }
-        
-    }
-    await fetchDataAndProcess();
-
-    if (!ok) {
-        return;
-    }
     // Check if the number of teams is a positive number
     if (data['nbTeams'] < 0 || isNaN(data['nbTeams'])) {
         alert('Le nombre d\'équipes ne peut pas être inférieur à 0');
@@ -95,28 +68,25 @@ document.querySelector('form').addEventListener('submit', async function(event) 
     console.log(data);
 
     const url = "http://localhost:3000/api/chasses/addChasse";
-    if(ok == true){
-        console.log(ok)
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP : ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Réponse du serveur :', data);
-        })
-        .catch(error => {
-            console.error('Erreur lors de la requête :', error);
-        });
-    }
+    fetch(url, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(data),
+    })
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP : ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Réponse du serveur :', data);
+    })
+    .catch(error => {
+        console.error('Erreur lors de la requête :', error);
+    });
 });
 
 document.getElementById('auto-fill').addEventListener('click', function() {
