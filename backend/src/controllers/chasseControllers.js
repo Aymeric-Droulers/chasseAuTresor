@@ -153,6 +153,52 @@ exports.addChasse = async (req, res) => {
 
 
 /*
+ Modifie une chasse avec les infos de base
+* */
+exports.editChasse = async (req, res) => {
+    try{
+        const {accessCode,name,nbTeams,peopleByTeam,startDate,duration,themes,place,randomDeparture,randomSteps}= req.body;
+        const {id} = req.params;
+        const validation = validateChasseData(req.body);
+
+        if(validation.status === false){
+            return res.status(400).json({status:false,message:validation.message});
+        }
+        const chasse = await getChasseById(id);
+        console.log(chasse)
+        if(!chasse){
+            return res.status(404).json({error: 'Chasse not found'});
+        }
+
+        const updateData = {
+            "name": name,
+            "nbTeams":nbTeams,
+            "peopleByTeam":peopleByTeam,
+            "startDate":startDate,
+            "duration":duration,
+            "themes":themes,
+            "accessCode":accessCode,
+            "place":place,
+            "randomDeparture":randomDeparture,
+            "randomSteps":randomSteps,
+        }
+        const objectId = new ObjectId(id);
+        const db = getDB();
+        const result = await db.collection('Chasses').updateOne(
+            {_id:objectId},
+            {$set:updateData}
+        );
+        console.log(result);
+        res.status(201).json({status:true, message: "Chasse mis a jour" });
+
+
+    }catch(err) {
+        res.status(500).json(err);
+    }
+}
+
+
+/*
 Ajoute une etape a une chasse
  */
 
@@ -165,7 +211,8 @@ exports.addStep = async (req, res) => {
             chasseId: objectId,
             stepName: req.body.stepName,
             stepHint: req.body.stepHint,
-            stepCode: req.body.stepCode
+            stepCode: req.body.stepCode,
+            points:req.body.points,
         };
 
 
@@ -179,7 +226,8 @@ exports.addStep = async (req, res) => {
             stepId:lastId+1,
             stepName:req.body.stepName,
             stepHint:req.body.stepHint,
-            stepCode:req.body.stepCode
+            stepCode:req.body.stepCode,
+            points:req.body.points
         })
 
         if (!validation.success) {
