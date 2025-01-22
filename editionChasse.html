@@ -1,51 +1,92 @@
 <!DOCTYPE html>
 <html lang="fr">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Formulaire</title>
+    <title>Édition de Chasse</title>
+    <link rel="stylesheet" href="formulaire.css">
 </head>
+
 <body>
-<h1>Édition de la chasse : </h1>
-<form action="/submit" method="post">
-    <label for="name">Nom de la chasse</label>
-    <input type="text" id="name" name="name" required><br><br>
+    <header class="header">
+        <div class="logo-title">
+            <img src="../images/logo.png" alt="Logo Lockéo" class="logo">
+            <h1 class="header-title">LOCKÉO</h1>
+        </div>
+        <nav class="nav-links">
+            <a href="creer-evenement.html" class="nav-link">Créer son événement</a>
+            <a href="evenements-alentours.html" class="nav-link">Événements aux alentours</a>
+            <a href="historique.html" class="nav-link">Historique</a>
+        </nav>
+        <img src="../images/connexion.png" alt="Connexion" class="login-logo">
+    </header>
+    <div class="form1">
+        <form action="/submit" method="post">
+            <h1>Édition de la chasse</h1>
+            <label for="name">Nom de la chasse</label>
+            <input type="text" id="name" name="name" required><br><br>
 
-    <label for="nbTeams">Nombre d'équipes</label>
-    <input type="number" id="nbTeams" name="nbTeams" min="0" required><br><br>
+            <label for="nbTeams">Nombre d'équipes</label>
+            <input type="number" id="nbTeams" name="nbTeams" min="0" required><br><br>
 
-    <label for="peopleByTeam">Nombre de membres par équipe</label>
-    <input type="number" id="peopleByTeam" name="peopleByTeam" min="0" required><br><br>
+            <label for="peopleByTeam">Nombre de membres par équipe</label>
+            <input type="number" id="peopleByTeam" name="peopleByTeam" min="0" required><br><br>
 
-    <label for="startDate">Date et heure de début</label>
-    <input type="datetime-local" id="startDate" name="startDate" required><br><br>
+            <label for="startDate">Date et heure de début</label>
+            <input type="datetime-local" id="startDate" name="startDate" required><br><br>
 
-    Durée de la chasse<br>
-    <label for="duration_hours"></label>
-    <input type="number" id="duration_hours" name="duration_hours" min="0" required>h
-    <label for="duration_minutes"></label>
-    <input type="number" id="duration_minutes" name="duration_minutes" min="0" max="59" required>min<br><br>
+            <div class="duration-container">
+                <p>Durée de la chasse :</p>
+                <input type="number" id="duration_hours" name="duration_hours" min="0" placeholder="h" required>
+                <input type="number" id="duration_minutes" name="duration_minutes" min="0" max="59" placeholder="min"
+                    required>
+            </div>
 
-    <label for="place">Lieu</label>
-    <input type="text" id="place" name="place" required><br><br>
+            <label for="place">Lieu</label>
+            <input type="text" id="place" name="place" required><br><br>
 
-    <label for="accessCode">Code d'accès</label>
-    <input type="text" id="accessCode" name="accessCode" required><br><br>
+            <label for="accessCode">Code d'accès</label>
+            <input type="text" id="accessCode" name="accessCode" required><br><br>
 
-    <label for="themes">Thèmes (séparer par des virgules)</label>
-    <input type="text" id="themes" name="themes"><br><br>
+            <label for="themes">Thèmes (séparer par des virgules)</label>
+            <input type="text" id="themes" name="themes"><br><br>
 
-    <label for="randomSteps">Étapes aléatoires</label>
-    <input type="checkbox" id="randomSteps" name="randomSteps"><br><br>
+            <div class="check">
+                <label for="randomSteps">Étapes aléatoires</label>
+                <input type="checkbox" id="randomSteps" name="randomSteps"><br><br>
 
-    <label for="randomDeparture">Départ aléatoire</label>
-    <input type="checkbox" id="randomDeparture" name="randomDeparture"><br><br>
+                <label for="randomDeparture">Départ aléatoire</label>
+                <input type="checkbox" id="randomDeparture" name="randomDeparture"><br><br>
+            </div>
+            <div class="buttons-container">
+                <input type="submit" value="Modifier">
+                <button type="button" id="back">Retour</button>
+            </div>
+        </form>
+    </div>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h2>Lockéo</h2>
+                <p>Votre plateforme dédiée à l'organisation de chasses aux trésors immersives et éducatives.</p>
+            </div>
+            <div class="footer-section links">
+                <img src="../images/logo.png" alt="Logo Lockéo" class="logofooter">
+            </div>
+            <div class="footer-section contact">
+                <h3>Contactez-nous</h3>
+                <p>Email : contact@lockeo.com</p>
+                <p>Téléphone : +33 3 33 33 33 33</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2025 Lockéo | Tous droits réservés
+        </div>
+    </footer>
 
-    <input type="submit" value="Modifier">
-    <button type="button" id="back">Retour</button>
-</form>
-
-<script src="editionChasse.js"></script>
+    <script src="editionChasse.js"></script>
 
 </body>
+
 </html>
