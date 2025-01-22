@@ -6,6 +6,7 @@ const {validateStepData} = require("../middleware/validateStepData");
 const {getTeamInChasseByNumber} = require("../middleware/getTeamInChasseByNumber");
 const {getAccountById} = require("../utils/getAccountById");
 const {getPlayerListFromChasseAndNumTeam} = require("../middleware/getPlayerListFromChasseAndNumTeam");
+const {createBlankPorgress} = require("../utils/createBlankPorgress");
 
 
 /*
@@ -283,6 +284,48 @@ exports.getPlayerInPlayerList = async (req, res) => {
 }
 
 
+exports.addTeam = async (req, res) => {
+    try {
+        const {id} = req.params;
+        const objectId = new ObjectId(id);
+        const data = {
+            chasseId: objectId,
+            teamName: req.body.teamName,
+        };
+
+        const chasse = await getChasseById(id);
+        let currentTeams = chasse.playingTeams;
+
+        const lastId= currentTeams[currentTeams.length-1].teamId;
+
+        currentTeams.push({
+            teamId:lastId+1,
+            teamName:req.body.teamName,
+            teamPlayersIds:[],
+            teamProgress:createBlankPorgress(chasse.steps.length),
+            won:false
+        })
+
+        if (!validation.success) {
+            //update de la chasse
+            res.status(400).json({status: false, message: validation.message});
+            console.log("les données ne sont pas valides");
+        }else{
+            const db = getDB();
+            const result = await db.collection('Chasses').updateOne(
+                { _id: objectId },
+                { $set: { playingTeams :currentTeams } }
+            );
+            console.log("team added");
+            res.status(201).json({status:true, message: "Equipe ajoutée" ,id:currentTeams.length});
+        }
+
+    }catch (err){
+        res.status(500).json(err);
+    }
+}
+
+
 
 exports.addPlayer = async (req, res) => {
     let{id,team}=req.params;
@@ -323,7 +366,6 @@ exports.addPlayer = async (req, res) => {
     }
     console.log("player added");
     res.status(201).json({status:true, message: "Joueur ajoutée" });
-
 
 
 
