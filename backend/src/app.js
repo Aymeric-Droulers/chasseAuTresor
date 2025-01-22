@@ -6,31 +6,21 @@ const path = require('path');
 const { connectDB } = require('./config/db');
 const userRoutes = require('./routes/userRoutes');
 const routes = require('./routes/routes');
+
 const app = express();
 
-// 1. Connexion BDD
+// 1. Connexion à MongoDB
 connectDB();
 
-// 2. Middlewares de base
+// 2. Middleware pour parser le JSON
 app.use(express.json());
 
 // 3. Configuration CORS
-//    Choisis l'URL EXACTE où tu ouvres ton front.
-//    Si tu ouvres http://localhost:5500/accueil.html, alors :
 app.use(cors({
   origin: '*',
-  methods: ['GET','POST','PUT','DELETE'],
-  credentials: true 
+  methods: ['GET', 'POST', 'PUT', 'DELETE'],
+  credentials: true
 }));
-
-/* 
-   Si tu préfères 127.0.0.1, alors mets :
-app.use(cors({
-  origin: 'http://127.0.0.1:5500',  
-  methods: ['GET','POST','PUT','DELETE'],
-  credentials: true 
-}));
-*/
 
 // 4. Configuration de session
 app.use(session({
@@ -38,22 +28,21 @@ app.use(session({
   resave: false,
   saveUninitialized: false,
   cookie: {
-    sameSite: 'none', // indispensable en cross-origin
-    secure: false     // false si en local http, true en HTTPS prod
+    sameSite: 'none',
+    secure: false
   }
 }));
 
-// 5. Brancher tes routes
+// 5. Brancher les routes API
 app.use('/api', userRoutes);
 app.use('/api', routes);
 
-// 6. Servir le dossier "chasseautresor" (où se trouve accueil.html, etc.)
-app.use(express.static(path.join(__dirname, '../chasseautresor')));
+// 6. Servir les fichiers statiques
+app.use(express.static(path.resolve(__dirname, '../../')));
 
+// 7. Rediriger la route '/' vers le fichier accueil.html
 app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, '../chasseautresor/accueil.html'));
+  res.sendFile(path.resolve(__dirname, '../../accueil.html'));
 });
-
-
 
 module.exports = app;
