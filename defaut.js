@@ -5,6 +5,7 @@ var Codealert = document.getElementById("Codealert");
 
 Create.addEventListener("click",DoCreate);
 Join.addEventListener("click",DoJoin);
+
 function DoCreate(){
     window.location.assign('admin.html');
 }
