@@ -264,3 +264,20 @@ exports.getPlayerList = async (req, res) => {
 }
 
 
+exports.getPlayerInPlayerList = async (req, res) => {
+    const {id, team,player} = req.params;
+    const resultat =await getPlayerListFromChasseAndNumTeam(id,team);
+    if(!resultat.status){
+        return res.status(400).json({message:resultat.message});
+    }else{
+        const playerList = resultat.content;
+        if(playerList.length < player){
+            return res.status(404).json({message:"Player not found (Too high)"});
+        }
+        if(!playerList[player-1]){
+            return res.status(404).json({message:"Player not found"});
+        }
+        return res.status(200).json(playerList[player-1]);
+    }
+
+}
