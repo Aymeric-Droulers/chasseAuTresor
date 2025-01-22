@@ -10,6 +10,7 @@ var tablePoints;
 var mapOutput = document.getElementById("mapShow");
 var buttonPointsChangeOrder = document.getElementById("changePointsOrder");
 var arnaque = document.getElementById("potionD'Invisibilite");
+var validationAll = document.getElementById("validateAll");
 var listSteps = [];
 var listPointsMap = [];
 var listDeletes = [];
@@ -25,7 +26,9 @@ buttonStepValidation.addEventListener("click",createStep);
 buttonStepsChangeOrder.addEventListener("click",changeOrder);
 buttonMapValidation.addEventListener("click",validateMap);
 buttonPointsChangeOrder.addEventListener("click",changeOrderPoints);
+validationAll.addEventListener("click",sendToDB);
 mapOutput.addEventListener("mousedown",placePoints);
+
 
 mapInput.onchange = function(event) {
     const file = event.target.files[0];
@@ -320,4 +323,38 @@ function deleteStep() {
     tablePoints.removeChild(tablePoints.children[toDelete]);
     mapForm.removeChild(mapForm.children[toDelete+7])
     changeOrderPoints();
+}
+
+function sendToDB() {
+    const url = "http://localhost:3000/api/chasses/0/addStep";
+    var data = {};
+    data["steps"] = [];
+    data["steps"].push({});
+    //data["map"] = mapOutput.src;
+    for (let i = 0; i < listSteps.length; i++) {
+        console.log(data);
+        data["steps"][0]["stepId"] = i;
+        data["steps"][0]["stepName"] = listSteps[i][0];
+        data["steps"][0]["stepHint"] = listSteps[i][1];
+        data["steps"][0]["points"] = listPointsMap[i];
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Réponse du serveur :', data);
+        })
+        .catch(error => {
+            console.error('Erreur lors de la requête :', error);
+        });
+    }
 }
