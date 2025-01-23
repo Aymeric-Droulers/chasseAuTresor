@@ -2,6 +2,7 @@
 const express = require('express');
 const cors = require('cors');
 const session = require('express-session');
+const bodyParser = require('body-parser');
 const path = require('path');
 const { connectDB } = require('./config/db');
 //const userRoutes = require('./routes/userRoutes');
@@ -13,25 +14,30 @@ const app = express();
 connectDB();
 
 // 2. Middleware pour parser le JSON
-app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
 
 // 3. Configuration CORS
 app.use(cors({
-  origin: '*',
+  origin: 'http://localhost:5500',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
 
 // 4. Configuration de session
 app.use(session({
-  secret: 'votreSecret',
+  secret: 'your_secret_key',
   resave: false,
-  saveUninitialized: false,
-  cookie: {
-    sameSite: 'none',
-    secure: false
-  }
+  saveUninitialized: true,
+  cookie: { secure: false }
 }));
+
+app.get('/', (req, res) => {
+  const sessionData = req.session;
+
+  // Access session data
+  console.log("Test de la session Data : ");
+  console.log(sessionData);
+});
 
 // 5. Brancher les routes API
 app.use('/api', routes);

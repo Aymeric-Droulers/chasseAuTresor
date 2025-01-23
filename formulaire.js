@@ -1,3 +1,24 @@
+url="http://localhost:3000/api/session"
+fetch(url, {
+    method: 'GET',
+    credentials:'include',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+})
+    .then(response => {
+        if (!response.ok) {
+            throw new Error(`Erreur HTTP : ${response.status}`);
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log(data);
+    });
+
+
+
+
 
 document.querySelector('form').addEventListener('submit', async function(event) {
     event.preventDefault(); // Empêche l'envoi du formulaire

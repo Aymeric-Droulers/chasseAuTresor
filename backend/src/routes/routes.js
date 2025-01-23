@@ -18,7 +18,7 @@ const {login, logout, getSession} = require("../controllers/authControllers");
 
 router.post('/login', login);
 router.post('/logout', logout);
-router.get('/api/session',getSession);
+router.get('/session',getSession);
 
 //  /api/users
 router.get('/accounts', getAllUsers);

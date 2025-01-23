@@ -1,13 +1,13 @@
 // chasse.js
 
-let chaseName   = null;   
+let chasseName   = null;
 let startTime   = null;   
 let endTime     = null;   
 let checkingInt = null;   
 let isFinished  = false;  
 
 function initChasseData(data) {
-  chaseName = data.name || "Chasse sans nom";
+  chasseName = data.name || "Chasse sans nom";
 
   // Convert startDate
   startTime = new Date(data.startDate);
@@ -17,7 +17,7 @@ function initChasseData(data) {
   endTime = new Date(startTime.getTime() + durationMs);
 
   // Met à jour le titre
-  document.getElementById('chasseName').textContent = "Chasse : " + chaseName;
+  document.getElementById('chasseName').textContent = "Chasse : " + chasseName;
 
   // Lance la boucle
   checkingInt = setInterval(updateDisplay, 1000);
