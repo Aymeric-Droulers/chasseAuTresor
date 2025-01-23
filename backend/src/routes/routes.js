@@ -1,3 +1,7 @@
+const { addTeam, getAllTeams } = require('../controllers/chasseControllers');
+const { joinTeamByCode } = require('../controllers/chasseControllers');
+
+
 // src/routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
@@ -11,6 +15,12 @@ router.get('/accounts', getAllUsers);
 router.post('/accounts/addAccount', addAccount);
 router.get('/accounts/:id', getUserById);
 router.get("/accounts/getByMail/:mail",getUserByMail);
+
+router.post('/teams', addTeam); // Ajoute une équipe sans référence à une chasse
+router.get('/teams', getAllTeams); // Récupère toutes les équipes
+router.post('/teams/join', joinTeamByCode); // Route pour rejoindre une équipe avec un code
+
+
 
 //   /api/chasses
 
