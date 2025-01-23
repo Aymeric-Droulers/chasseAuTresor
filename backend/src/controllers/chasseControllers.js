@@ -7,13 +7,12 @@ const {getTeamInChasseByNumber} = require("../middleware/getTeamInChasseByNumber
 const {getAccountById} = require("../utils/getAccountById");
 const {getPlayerListFromChasseAndNumTeam} = require("../middleware/getPlayerListFromChasseAndNumTeam");
 const {createBlankPorgress} = require("../utils/createBlankPorgress");
-
-
+const {formidable}=require("formidable");
+var fs = require('fs');
+const path = require("path");
 /*
-*
 * Récupère toutes les chasses de la collection Chasses
-*
-* */
+*/
 exports.getAllChasses = async (req, res) => {
 
     try {
@@ -27,8 +26,7 @@ exports.getAllChasses = async (req, res) => {
 
 
 /*
-* Récupère la chasse possédant l'id id
-* */
+* Récupère la chasse possédant l'id id*/
 
 exports.getChasseById=async (req, res) => {
     try {
@@ -394,3 +392,125 @@ exports.joinTeamByCode = async (req, res) => {
         res.status(500).json({ message: 'Server error. Please try again later.' });
     }
 };
+
+
+exports.validateStepInProgress =async (req, res) => {
+    try {
+        const {id, team} = req.params;
+        const numStep = req.body.step;
+        let chasse = await getChasseById(id);
+        const teamProgress = chasse.playingTeams[team - 1].teamProgress;
+        teamProgress[numStep-1].reached = true;
+        const dateHeure = new Date();
+        teamProgress[numStep-1].timeReached=dateHeure.toISOString();
+        chasse.playingTeams[team - 1].teamProgress = teamProgress;
+
+        const DB = await getDB();
+        const objectId = new ObjectId(id);
+        const result = await DB.collection('Chasses').updateOne(
+            {_id: objectId},
+            {$set: chasse}
+        );
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({message: "Chasse not updated"});
+        }
+        return res.status(200).json({status: true, message: "Chasse updated successfully"});
+    }catch (err){
+        return res.status(500).json({message: "Function didn't ran successfully" });
+    }
+}
+
+
+
+exports.addMapImg = async (req, res) => {
+    const id= req.params.id;
+    const buffers = [];
+
+    req.on('data', (chunk) => {
+        buffers.push(chunk); // Récupère les morceaux de données envoyées
+    });
+
+    req.on('end', () => {
+        const fullBuffer = Buffer.concat(buffers);
+
+        // Exemple pour extraire des métadonnées du fichier (par défaut ici)
+        const boundary = req.headers['content-type'].split('; ')[1].split('=')[1];
+        const parts = fullBuffer.toString().split(`--${boundary}`);
+
+        const filePart = parts.find((part) =>
+            part.includes('Content-Disposition: form-data; name="file"; filename='),
+        );
+
+        if (!filePart) {
+            return res.status(400).json({ message: 'No file uploaded' });
+        }
+
+        // Extraire les métadonnées du fichier
+        const filename = filePart
+            .match(/filename="([^"]+)"/)[1]
+            .replace(/[^a-z0-9.\-_]/gi, ''); // Nettoyer le nom du fichier
+
+        // Extraire les données du fichier (après une ligne vide)
+        const fileData = filePart.split('\r\n\r\n')[1].split('\r\n--')[0];
+        const fileBuffer = Buffer.from(fileData, 'binary');
+
+        // Enregistrer le fichier sur le serveur
+        const extension = filename.split('.')[1]
+        const uploadPath = path.join(__dirname, '../../public/maps', (id+"."+extension));
+        const insertFileName = id+"."+extension;
+        console.log(uploadPath);
+
+        fs.writeFile(uploadPath, fileBuffer, (err) => {
+            if (err) {
+                console.error(err);
+                return res.status(500).json({ message: 'File upload failed' });
+            }
+
+            console.log(`File saved at ${uploadPath}`);
+            res.status(200).json({ message: 'File uploaded successfully', path: uploadPath });
+
+
+            //insertion dans la BDD
+            const objectId = new ObjectId(id);
+            const db = getDB();
+            const result = db.collection('Chasses').updateOne(
+                { _id: objectId },
+                { $set: { mapFile: insertFileName } }
+            );
+
+
+
+        });
+    });
+
+}
+
+exports.getChasseMapImg = async (req,res)=>{
+    console.log("chasse map img")
+    const idChasse = req.params.id;
+
+    const objectId = new ObjectId(idChasse);
+    const db = getDB();
+    const result =await db.collection('Chasses').findOne(
+        { _id: objectId },
+    );
+    const fileName = result.mapFile;
+
+    const pathFile = path.resolve(__dirname,'../../public/maps/'+fileName);
+    console.log(pathFile);
+    if(fs.existsSync(pathFile)) {
+
+        // renvoit le fichier au client
+        res.sendFile(pathFile)
+    } else {
+        // le fichier n'existe pas
+
+        res.statusCode = 404;
+
+        res.json({
+            success: false,
+            message: "Not found",
+            path: pathFile
+        })
+    }
+}

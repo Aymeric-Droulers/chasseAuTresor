@@ -16,3 +16,14 @@ exports.login = (req, res) => {
     }
     return res.status(401).json({ success: false, message: 'Identifiants invalides' });
 }
+
+exports.getSession = async (req, res) => {
+    if (req.session.isLoggedIn) {
+        res.json({
+            isLoggedIn: req.session.isLoggedIn,
+            mail: req.session.mail
+        });
+    } else {
+        res.status(401).json({ message: 'Utilisateur non connecté' });
+    }
+}
