@@ -1,7 +1,6 @@
+document.querySelector('form').addEventListener('submit', async function (event) {
+    event.preventDefault(); // Empêche l'envoi du formulaire par défaut
 
-document.querySelector('form').addEventListener('submit', async function(event) {
-    event.preventDefault(); // Empêche l'envoi du formulaire
-    ok = true;
     const formData = new FormData(event.target);
 
     const data = {};
@@ -9,120 +8,94 @@ document.querySelector('form').addEventListener('submit', async function(event) 
         data[key] = value;
     });
 
-    data['duration_hours'] = parseInt(data['duration_hours']);
-    data['duration_minutes'] = parseInt(data['duration_minutes']);
-    data['nbTeams'] = parseInt(data['nbTeams']);
-    data['peopleByTeam'] = parseInt(data['peopleByTeam']);
+    // Validation et transformation des données
+    try {
+        data['duration_hours'] = parseInt(data['duration_hours'], 10);
+        data['duration_minutes'] = parseInt(data['duration_minutes'], 10);
+        data['nbTeams'] = parseInt(data['nbTeams'], 10);
+        data['peopleByTeam'] = parseInt(data['peopleByTeam'], 10);
 
-    // Check if the duration is a positive number and less than 60
-    if (data['duration_minutes'] > 59 || data['duration_minutes'] < 0 || isNaN(data['duration_minutes'])) {
-        alert('La durée en minutes doit être un nombre positif inférieur à 60');
-        return;
-    }
-
-    //check if the access code isn't used
-    async function fetchDataAndProcess() {
-        try {
-            const response = await fetch("http://localhost:3000/api/chasses");
-            if (!response.ok) {
-                throw new Error('Network response was not ok ' + response.statusText);
-            }
-            const total = await response.json(); // Assigner directement les données
-
-            // Utiliser total dans la boucle
-            for(let i=0; i<total.length; i++){
-                if(data["accessCode"] == total[i]["accessCode"]){
-                    ok = false;
-                    console.log(total[i]["accessCode"])
-                    console.log(data["accessCode"])
-                    alert('Le code d accès existe déjà.')
-                    return;
-                }
-            }
-        } catch (error) {
-            console.error('Erreur lors de la requête:', error);
+        if (data['duration_minutes'] > 59 || data['duration_minutes'] < 0 || isNaN(data['duration_minutes'])) {
+            throw new Error('La durée en minutes doit être un nombre positif inférieur à 60.');
         }
-        
-    }
-    await fetchDataAndProcess();
 
-    if (!ok) {
-        alert("Le code d'accès existe déjà.");
+        if (data['nbTeams'] < 1 || isNaN(data['nbTeams'])) {
+            throw new Error('Le nombre d\'équipes doit être supérieur ou égal à 1.');
+        }
+
+        if (data['peopleByTeam'] < 1 || isNaN(data['peopleByTeam'])) {
+            throw new Error('Le nombre de membres par équipe doit être supérieur ou égal à 1.');
+        }
+
+        data['duration'] = data['duration_hours'] * 60 + data['duration_minutes'];
+        if (data['duration'] < 1) {
+            throw new Error('La durée totale de la chasse doit être supérieure à 1 minute.');
+        }
+
+        const startDate = new Date(data['startDate']);
+        if (startDate < new Date()) {
+            throw new Error('La date de départ doit être dans le futur.');
+        }
+        data['startDate'] = startDate.toISOString();
+
+        data['randomDeparture'] = document.getElementById('randomDeparture').checked;
+        data['randomSteps'] = document.getElementById('randomSteps').checked;
+        data['themes'] = data['themes'].split(',').filter((value) => value.trim() !== '');
+
+        delete data['duration_hours'];
+        delete data['duration_minutes'];
+    } catch (error) {
+        alert(error.message);
         return;
     }
 
-    // Check if the number of teams is a positive number
-    if (data['nbTeams'] < 1 || isNaN(data['nbTeams'])) {
-        alert('Le nombre d\'équipes ne peut pas être inférieur à 1');
-        return;
-    }
-    // Check if the number of members is a positive number
-    if (data['peopleByTeam'] < 1 || isNaN(data['peopleByTeam'])) {
-        alert('Le nombre de membres par équipe ne peut pas être inférieur à 1');
-        return;
-    }
-
-    // Convert hours to minutes
-    data['duration'] = data['duration_hours'] * 60 + data['duration_minutes'];
-
-    // Check if duration is superior to 1 minute
-    if (data['duration'] < 1) {
-        alert('La durée de la chasse doit être supérieure à 1 minute');
-        return;
-    }
-
-    // Remove hours and minutes from data
-    delete data['duration_hours'];
-    delete data['duration_minutes'];
-
-    data['randomDeparture'] = document.getElementById('randomDeparture').checked;
-    data['randomSteps'] = document.getElementById('randomSteps').checked;
-
-    // Convert startDate to ISO 8601 format
-    const startDate = new Date(data['startDate']);
-    data['startDate'] = startDate.toISOString();
-
-    // Convert themes to array
-    data['themes'] = data['themes'].split(',');
-
-    // Check if start date is in the future
-    if (startDate < new Date()) {
-        alert('La date de départ doit être dans le futur');
+    // Vérification du code d'accès unique
+    try {
+        const response = await fetch('http://localhost:3000/api/chasses');
+        if (!response.ok) {
+            throw new Error(`Erreur serveur : ${response.statusText}`);
+        }
+        const existingChasses = await response.json();
+        const accessCodeExists = existingChasses.some(
+            (chasse) => chasse.accessCode === data.accessCode
+        );
+        if (accessCodeExists) {
+            throw new Error('Le code d\'accès existe déjà. Veuillez en choisir un autre.');
+        }
+    } catch (error) {
+        console.error('Erreur lors de la vérification du code d\'accès :', error);
+        alert(error.message);
         return;
     }
 
-    // Remove empty values from themes
-    data['themes'] = data['themes'].filter(function(value) {
-        return value !== '';
-    });
-
-    console.log(data);
-    //if(ok == true){
-        const url = "http://localhost:3000/api/chasses/addChasse";
-        fetch(url, {
+    // Envoi des données au serveur
+    try {
+        const url = 'http://localhost:3000/api/chasses/addChasse';
+        const response = await fetch(url, {
             method: 'POST',
             headers: {
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
             },
             body: JSON.stringify(data),
-        })
-        .then(response => {
-            if (!response.ok) {
-                throw new Error(`Erreur HTTP : ${response.status}`);
-            }
-            return response.json();
-        })
-        .then(data => {
-            console.log('Réponse du serveur :', data);
-        })
-        .catch(error => {
-            console.error('Erreur lors de la requête :', error);
         });
-        window.location.assign("menu_admin.html");
-    //}
+
+        if (!response.ok) {
+            throw new Error(`Erreur lors de la création de la chasse : ${response.statusText}`);
+        }
+
+        const result = await response.json();
+        console.log('Chasse créée avec succès :', result);
+
+        // Redirection après succès
+        window.location.assign('menu_admin.html');
+    } catch (error) {
+        console.error('Erreur lors de l\'envoi des données :', error);
+        alert(`Une erreur est survenue : ${error.message}`);
+    }
 });
 
-document.getElementById('auto-fill').addEventListener('click', function() {
+// Remplissage automatique des champs pour tester rapidement
+document.getElementById('auto-fill').addEventListener('click', function () {
     document.getElementById('name').value = 'Chasse au trésor test';
     document.getElementById('nbTeams').value = 5;
     document.getElementById('peopleByTeam').value = 4;
@@ -131,7 +104,7 @@ document.getElementById('auto-fill').addEventListener('click', function() {
     document.getElementById('duration_minutes').value = 30;
     document.getElementById('accessCode').value = 'TEST1234';
     document.getElementById('randomDeparture').checked = true;
-    document.getElementById('place').value = "Arras";
-    document.getElementById("randomSteps").checked = true;
-    document.getElementById("themes").value = "Médiéval,Difficile,Aventure";
+    document.getElementById('place').value = 'Arras';
+    document.getElementById('randomSteps').checked = true;
+    document.getElementById('themes').value = 'Médiéval,Difficile,Aventure';
 });
