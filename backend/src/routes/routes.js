@@ -11,13 +11,14 @@ const { getAllUsers,getUserById,addAccount, getUserByMail, getUserChassesPartici
 const {getAllChasses, getChasseById, addChasse,getChasseSteps,getChasseStep, addStep, getChasseTeams, getChasseTeam,
     editChasse, getPlayerList, getPlayerInPlayerList, addPlayer, addTeam, getTeamProgress
 }=require('../controllers/chasseControllers');
-const {login, logout} = require("../controllers/authControllers");
+const {login, logout, getSession} = require("../controllers/authControllers");
 
 
 // auth routes
 
 router.post('/login', login);
 router.post('/logout', logout);
+router.get('/api/session',getSession);
 
 //  /api/users
 router.get('/accounts', getAllUsers);
