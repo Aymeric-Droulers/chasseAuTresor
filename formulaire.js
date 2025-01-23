@@ -1,7 +1,7 @@
 
 document.querySelector('form').addEventListener('submit', async function(event) {
     event.preventDefault(); // Empêche l'envoi du formulaire
-
+    ok = true;
     const formData = new FormData(event.target);
 
     const data = {};
@@ -17,6 +17,37 @@ document.querySelector('form').addEventListener('submit', async function(event) 
     // Check if the duration is a positive number and less than 60
     if (data['duration_minutes'] > 59 || data['duration_minutes'] < 0 || isNaN(data['duration_minutes'])) {
         alert('La durée en minutes doit être un nombre positif inférieur à 60');
+        return;
+    }
+
+    //check if the access code isn't used
+    async function fetchDataAndProcess() {
+        try {
+            const response = await fetch("http://localhost:3000/api/chasses");
+            if (!response.ok) {
+                throw new Error('Network response was not ok ' + response.statusText);
+            }
+            const total = await response.json(); // Assigner directement les données
+
+            // Utiliser total dans la boucle
+            for(let i=0; i<total.length; i++){
+                if(data["accessCode"] == total[i]["accessCode"]){
+                    ok = false;
+                    console.log(total[i]["accessCode"])
+                    console.log(data["accessCode"])
+                    alert('Le code d accès existe déjà.')
+                    return;
+                }
+            }
+        } catch (error) {
+            console.error('Erreur lors de la requête:', error);
+        }
+        
+    }
+    await fetchDataAndProcess();
+
+    if (!ok) {
+        alert("Le code d'accès existe déjà.");
         return;
     }
 
@@ -66,28 +97,29 @@ document.querySelector('form').addEventListener('submit', async function(event) 
     });
 
     console.log(data);
-
-    const url = "http://localhost:3000/api/chasses/addChasse";
-    fetch(url, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
-        body: JSON.stringify(data),
-    })
-    .then(response => {
-        if (!response.ok) {
-            throw new Error(`Erreur HTTP : ${response.status}`);
-        }
-        return response.json();
-    })
-    .then(data => {
-        console.log('Réponse du serveur :', data);
-    })
-    .catch(error => {
-        console.error('Erreur lors de la requête :', error);
-    });
-    window.location.assign("menu_admin.html");
+    //if(ok == true){
+        const url = "http://localhost:3000/api/chasses/addChasse";
+        fetch(url, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(data),
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Réponse du serveur :', data);
+        })
+        .catch(error => {
+            console.error('Erreur lors de la requête :', error);
+        });
+        window.location.assign("menu_admin.html");
+    //}
 });
 
 document.getElementById('auto-fill').addEventListener('click', function() {

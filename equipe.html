@@ -3,54 +3,53 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Team Creation</title>
+    <title>Team Management</title>
     <link rel="stylesheet" href="equipe.css">
 </head>
 <body>
     <div class="container">
-        <!-- Section de création d'équipe -->
-        <section id="create-section" class="create-section">
-            <h1>Create Your Team</h1>
-            <div id="customTeamForm">
-                <div class="form-group">
-                    <label for="teamName">Team Name:</label>
-                    <input type="text" id="teamName" placeholder="Enter team name">
-                </div>
-                <div class="form-group">
-                    <label for="teamCode">Access Code (4 digits):</label>
-                    <input type="text" id="teamCode" placeholder="Enter 4-digit access code">
-                </div>
-                <button id="createTeamButton">Create Team</button>
-            </div>
-        </section>
+        <h1 class="title">All Teams</h1>
 
-        <!-- Section des équipes créées -->
-        <section id="teams-section" class="teams-section">
-            <h2>Teams Created</h2>
-            <div class="team-list" id="teamList"></div>
-        </section>
+        <!-- Search Bar -->
+        <div class="search-bar">
+            <label for="searchTeams">Search Teams:</label>
+            <input id="searchTeams" type="text" placeholder="Search by team name" autocomplete="off">
+        </div>
 
-        <!-- Section pour rejoindre une équipe -->
-        <div id="join-section" class="overlay-form" style="display: none;">
-            <div class="form-container">
-                <h2>Join Team: <span id="teamNameDisplay"></span></h2>
-                <div class="form-group">
-                    <label for="firstName">First Name:</label>
-                    <input type="text" id="firstName" placeholder="Enter your first name">
-                </div>
-                <div class="form-group">
-                    <label for="lastName">Last Name:</label>
-                    <input type="text" id="lastName" placeholder="Enter your last name">
-                </div>
-                <div class="form-group">
-                    <label for="enteredCode">Access Code:</label>
-                    <input type="text" id="enteredCode" placeholder="Enter the access code">
-                </div>
-                <button id="submitJoinButton">Join</button>
-                <button id="cancelJoinButton">Cancel</button>
-            </div>
+        <!-- Team List -->
+        <div id="teamList" class="team-list">
+            <!-- Teams will be dynamically rendered here -->
         </div>
     </div>
+
+    <!-- Floating Button for Creating Team -->
+    <button id="floatingCreateButton" class="floating-btn">+</button>
+
+    <!-- Create Team Pop-up -->
+    <div id="create-popup" class="popup hidden">
+        <h2>Create a Team</h2>
+        <label for="teamName">Team Name:</label>
+        <input id="teamName" type="text" placeholder="Enter team name" autocomplete="off">
+        <label for="accessCode">Access Code (4 digits):</label>
+        <input id="accessCode" type="text" placeholder="Enter access code" autocomplete="off"> 
+        <div class="popup-buttons">
+            <button id="createTeamButton" class="btn btn-primary">Create Team</button>
+            <button id="cancelCreateButton" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+
+    <!-- Join Team Pop-up -->
+    <div id="join-team-popup" class="popup hidden">
+        <h2>Join Team</h2>
+        <p id="teamNameDisplay"></p>
+        <label for="accessCodeInput">Access Code:</label>
+        <input id="accessCodeInput" type="text" placeholder="Enter the team's access code" autocomplete="off">
+        <div class="popup-buttons">
+            <button id="confirmJoinButton" class="btn btn-primary">Join</button>
+            <button id="cancelJoinPopup" class="btn btn-secondary">Cancel</button>
+        </div>
+    </div>
+
     <script src="equipe.js"></script>
 </body>
 </html>

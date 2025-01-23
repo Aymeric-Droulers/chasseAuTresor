@@ -6,6 +6,7 @@ const {validateStepData} = require("../middleware/validateStepData");
 const {getTeamInChasseByNumber} = require("../middleware/getTeamInChasseByNumber");
 const {getAccountById} = require("../utils/getAccountById");
 const {getPlayerListFromChasseAndNumTeam} = require("../middleware/getPlayerListFromChasseAndNumTeam");
+const {createBlankPorgress} = require("../utils/createBlankPorgress");
 
 
 /*
@@ -103,7 +104,6 @@ exports.getChasseTeam = async (req, res) => {
     return res.status(200).json(result.content);
 }
 
-
 /*
 * Ajoute une chasse avec les infos de base
 * */
@@ -142,7 +142,6 @@ exports.addChasse = async (req, res) => {
         res.status(500).json(err);
     }
 }
-
 
 /*
  Modifie une chasse avec les infos de base
@@ -188,7 +187,6 @@ exports.editChasse = async (req, res) => {
         res.status(500).json(err);
     }
 }
-
 
 /*
 Ajoute une etape a une chasse
@@ -241,7 +239,6 @@ exports.addStep = async (req, res) => {
     }
 }
 
-
 /*
 * récupère la liste des joueurs et leurs données
 * */
@@ -283,6 +280,39 @@ exports.getPlayerInPlayerList = async (req, res) => {
 }
 
 
+// Ajoute une équipe sans référence à une chasse
+exports.addTeam = async (req, res) => {
+    try {
+        const { teamName } = req.body;
+
+        if (!teamName || teamName.length < 3) {
+            return res.status(400).json({ error: 'Le nom de l\'équipe est invalide.' });
+        }
+
+        const db = getDB();
+        const result = await db.collection('Teams').insertOne({
+            teamName,
+            teamPlayersIds: [],
+        });
+
+        res.status(201).json({ message: 'Équipe ajoutée avec succès', teamId: result.insertedId });
+    } catch (err) {
+        res.status(500).json({ error: 'Erreur lors de l\'ajout de l\'équipe.' });
+    }
+};
+
+
+exports.getAllTeams = async (req, res) => {
+    try {
+        const db = getDB();
+        const teams = await db.collection('Teams').find().toArray();
+
+        res.status(200).json(teams);
+    } catch (err) {
+        res.status(500).json({ error: 'Erreur lors de la récupération des équipes.' });
+    }
+};
+
 
 exports.addPlayer = async (req, res) => {
     let{id,team}=req.params;
@@ -323,8 +353,44 @@ exports.addPlayer = async (req, res) => {
     }
     console.log("player added");
     res.status(201).json({status:true, message: "Joueur ajoutée" });
-
-
-
-
 }
+
+exports.getTeamProgress = async (req, res) => {
+    const {id,team} = req.params;
+    const chasse = await getChasseById(id);
+    const teamProgress=chasse.playingTeams[team-1].teamProgress;
+    let completedSteps= 0;
+    for(let i=0;i<teamProgress.length;i++){
+        console.log(teamProgress[i]);
+        if(teamProgress[i].reached){
+            completedSteps++;
+        }
+    }
+
+    return res.status(200).json({status:true, completedSteps:completedSteps});
+}
+
+
+
+
+exports.joinTeamByCode = async (req, res) => {
+    const { teamId, accessCode } = req.body;
+
+    try {
+        const db = getDB();
+        const team = await db.collection('Teams').findOne({ _id: new ObjectId(teamId) });
+
+        if (!team) {
+            return res.status(404).json({ message: 'Team not found' });
+        }
+
+        if (team.accessCode === accessCode) {
+            return res.status(200).json({ message: 'Successfully joined the team!', teamName: team.teamName });
+        } else {
+            return res.status(400).json({ message: 'Incorrect access code. Please try again.' });
+        }
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ message: 'Server error. Please try again later.' });
+    }
+};

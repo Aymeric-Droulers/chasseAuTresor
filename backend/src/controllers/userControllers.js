@@ -1,6 +1,7 @@
 const { getDB } = require('../config/db');
 const {ObjectId} = require("mongodb");
 const {validateAccountData}=require("../middleware/validateAccountData");
+const {getUserById, funcGetUserById} = require("../middleware/funcGetUserById");
 
 
 exports.getAllUsers = async (req, res) => {
@@ -17,15 +18,12 @@ exports.getAllUsers = async (req, res) => {
 
 exports.getUserById = async (req, res) => {
     try {
-        const DB = await getDB();
-        const {id} = req.params;
-        const objectId = new ObjectId(id);
-        const account = await DB.collection('Accounts').findOne({_id:objectId});
-
-        if(!account){
-            return res.status(404).json({error: 'Account not found'});
+        const{id}=req.params;
+        const response =await funcGetUserById(id);
+        if(!response){
+            res.status(404).json({error: 'No user with ID'});
         }
-        res.status(200).json(account);
+        res.status(200).json((response).content);
     }catch(err) {
         res.status(500).json(err);
     }
@@ -73,5 +71,33 @@ exports.addAccount = async (req, res) => {
     } catch (error) {
         console.log(error)
         res.status(500).json({ message: "Erreur serveur", error });
+    }
+}
+
+
+exports.getUserChassesParticipated = async (req, res) => {
+    try{
+        const id=req.params.id;
+        const user = await funcGetUserById(id);
+        const listesChasses = user.content.chassesParticipated;
+        return res.status(200).json(listesChasses);
+    }catch(err) {
+        return res.status(500).json(err);
+    }
+}
+
+
+exports.getUserChassesCreated = async (req, res) => {
+    try{
+        const id=req.params.id;
+        const user = await funcGetUserById(id);
+        if(user) {
+
+            const listesChasses = user.content.chassesCreated;
+            return res.status(200).json(listesChasses);
+        }
+        res.status(404).json({error: 'User not found'});
+    }catch(err) {
+        return res.status(500).json(err);
     }
 }
