@@ -1,75 +1,81 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion étapes</title>
-    <style>
-        #down0 {
-            position: relative;
-            left: 21.88px;
-        }
-
-        #mapForm {
-            position: absolute;
-            left: 320px;
-            top: 26px;
-            width: 500px;
-        }
-
-        #mapShow {
-            max-width: 500px;
-            max-height: 500px;
-            margin: 0px;
-        }
-
-        .points{
-            position: absolute;
-            width: 8px;
-            height: 8px;
-            background-color: red;
-            border-radius: 5px;
-            border-color: black;
-            border-width: 2px;
-            border-style: solid;
-            font-size: 8px;
-            text-align: center;
-        }
-    </style>
+    <link rel="stylesheet" href="gestionEtape.css">
 </head>
+
 <body>
+    <header class="header">
+        <div class="logo-title">
+            <img src="../images/logo.png" alt="Logo Lockéo" class="logo">
+            <h1 class="header-title">LOCKÉO</h1>
+        </div>
+        <nav class="nav-links">
+            <a href="creer-evenement.html" class="nav-link">Créer son événement</a>
+            <a href="evenements-alentours.html" class="nav-link">Événements aux alentours</a>
+            <a href="historique.html" class="nav-link">Historique</a>
+        </nav>
+        <img src="../images/connexion.png" alt="Connexion" class="login-logo">
+    </header>
     <main>
-        <form id="stepForm">
-            <label for="stepName">Nom de l'étape:</label>
-            <br>
-            <input type="text" id="stepName">
-            <br>
-            <label for="stepHint">Indice de l'étape:</label>
-            <br>
-            <input type="text" id="stepHint">
-            <br>
-            <br>
-            <input type="button" value="Valider l'étape" id="validateStep">
-            <br>
-        </form>
-        <form id="mapForm">
-            <input type="file" value="Ajouter une carte" id="mapInput" accept="image/png, image/jpeg">
-            <br>
-            <br>
-            <input type="button" value="Valider la carte" id="validateMap">
-            <br>
-            <br>
-            <img id="mapShow" src="">
-            <div id="potionD'Invisibilite" style="opacity:0;">Tout les points: <input type="button" value="Changer l'ordre des points" id="changePointsOrder"></div>
-        </form>
+        <div class="forms-container">
+            <form id="stepForm">
+                <h2>Ajouter une étape</h2>
+                <label for="stepName">Nom de l'étape:</label>
+                <br>
+                <input type="text" id="stepName">
+                <br>
+                <label for="stepHint">Indice de l'étape:</label>
+                <br>
+                <input type="text" id="stepHint">
+                <br>
+                <input type="button" value="Valider l'étape" id="validateStep" class="button">
+                <br>
+            </form>
+            <form id="mapForm">
+                <h2>Ajouter une carte</h2>
+                <input type="file" value="Ajouter une carte" id="mapInput" accept="image/png, image/jpeg">
+                <br>
+                <img id="mapShow" src="">
+                <br>
+                <input type="button" value="Valider la carte" id="validateMap" class="button">
+                <br>
+                <div id="potionD'Invisibilite" style="opacity:0;">Tout les points: <input type="button"
+                        value="Changer l'ordre des points" id="changePointsOrder" class="button"></div>
+            </form>
+        </div>
         <br>
-        Toutes les Etapes: <input type="button" value="Changer l'ordre des étapes" id="changeStepsOrder">
+        Toutes les étapes: <input type="button" value="Changer l'ordre des étapes" id="changeStepsOrder" class="button">
         <br>
         <table id="tableSteps"></table>
         <br>
-        <input type="button" value="Valider toutes les étapes" id="validateAll">
+        <input type="button" value="Valider toutes les étapes" id="validateAll" class="button">
         <div id="errorBox"></div>
     </main>
     <script src="gestionEtape.js"></script>
+    <footer class="footer">
+        <div class="footer-content">
+            <div class="footer-section about">
+                <h2>Lockéo</h2>
+                <p>Votre plateforme dédiée à l'organisation de chasses aux trésors immersives et éducatives.</p>
+            </div>
+            <div class="footer-section links">
+                <img src="../images/logo.png" alt="Logo Lockéo" class="logofooter">
+            </div>
+            <div class="footer-section contact">
+                <h3>Contactez-nous</h3>
+                <p>Email : contact@lockeo.com</p>
+                <p>Téléphone : +33 3 33 33 33 33</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            &copy; 2025 Lockéo | Tous droits réservés
+        </div>
+    </footer>
 </body>
+
 </html>
