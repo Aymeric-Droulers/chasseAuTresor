@@ -394,3 +394,32 @@ exports.joinTeamByCode = async (req, res) => {
         res.status(500).json({ message: 'Server error. Please try again later.' });
     }
 };
+
+
+exports.validateStepInProgress =async (req, res) => {
+    try {
+        const {id, team} = req.params;
+        const numStep = req.body.step;
+        let chasse = await getChasseById(id);
+        const teamProgress = chasse.playingTeams[team - 1].teamProgress;
+        teamProgress[numStep-1].reached = true;
+        const dateHeure = new Date();
+        teamProgress[numStep-1].timeReached=dateHeure.toISOString();
+        chasse.playingTeams[team - 1].teamProgress = teamProgress;
+
+        const DB = await getDB();
+        const objectId = new ObjectId(id);
+        const result = await DB.collection('Chasses').updateOne(
+            {_id: objectId},
+            {$set: chasse}
+        );
+        if (result.modifiedCount === 0) {
+            return res.status(404).json({message: "Chasse not updated"});
+        }
+        return res.status(200).json({status: true, message: "Chasse updated successfully"});
+    }catch (err){
+        return res.status(500).json({message: "Function didn't ran successfully" });
+    }
+}
+
+

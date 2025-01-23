@@ -1,5 +1,5 @@
 //const { addTeam, getAllTeams } = require('../controllers/chasseControllers');
-const { joinTeamByCode } = require('../controllers/chasseControllers');
+const { joinTeamByCode, validateStepInProgress} = require('../controllers/chasseControllers');
 
 
 // src/routes/userRoutes.js
@@ -48,7 +48,8 @@ router.get('/chasses/:id/allTeams/:team',getChasseTeam);
 router.get('/chasses/:id/allTeams/:team/playerList',getPlayerList);
 router.get('/chasses/:id/allTeams/:team/playerList/:player',getPlayerInPlayerList);
 router.post('/chasses/:id/allTeams/:team/addPlayer',addPlayer)
-router.get('/chasseS/:id/allTeams/:team/teamProgress',getTeamProgress)
+router.get('/chasses/:id/allTeams/:team/teamProgress',getTeamProgress)
+router.post('/chasses/:id/allTeams/:team/validateStepInProgress',validateStepInProgress)
 router.post('/chasses/addChasse', addChasse);
 
 
