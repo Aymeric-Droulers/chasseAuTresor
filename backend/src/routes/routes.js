@@ -1,5 +1,5 @@
 //const { addTeam, getAllTeams } = require('../controllers/chasseControllers');
-const { joinTeamByCode, validateStepInProgress} = require('../controllers/chasseControllers');
+const { joinTeamByCode, validateStepInProgress, addMapImg, getChasseMapImg} = require('../controllers/chasseControllers');
 
 
 // src/routes/userRoutes.js
@@ -52,6 +52,7 @@ router.post('/chasses/:id/allTeams/:team/addPlayer',addPlayer)
 router.get('/chasses/:id/allTeams/:team/teamProgress',getTeamProgress)
 router.post('/chasses/:id/allTeams/:team/validateStepInProgress',validateStepInProgress)
 router.post('/chasses/addChasse', addChasse);
-
+router.post('/chasses/:id/addMapImg',addMapImg)
+router.get('/chasses/:id/getMapImg',getChasseMapImg)
 
 module.exports = router;
