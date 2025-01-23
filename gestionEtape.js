@@ -12,6 +12,7 @@ var buttonPointsChangeOrder = document.getElementById("changePointsOrder");
 var arnaque = document.getElementById("potionD'Invisibilite");
 var validationAll = document.getElementById("validateAll");
 var validationError = document.getElementById("errorBox");
+var mapPoints = document.getElementById("mapPoints");
 var listSteps = [];
 var listPointsMap = [];
 var listDeletes = [];
@@ -21,6 +22,46 @@ var listUpArrowsPoints = [];
 var listDownArrows = [];
 var listDownArrowsPoints = [];
 var placingPoints = false;
+
+const urlParams = new URLSearchParams(window.location.search);
+var huntId = urlParams.get('hunt_id');
+if (!huntId) {
+    //window.location.href = "accueil.html";
+    window.location.href = "gestionEtape.html?hunt_id=678f6541897e114b88f2e497";
+}
+
+const url = "http://localhost:3000/api/chasses/";
+
+fetch(url, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`);
+    }
+    return response.json();
+})
+.then(hunts => {
+    hunts.forEach(hunt => {
+        if (hunt._id == huntId) {
+            console.log(hunt);
+            for (let i = 0; i < hunt.steps.length; i++) {
+                inputStepName.value = hunt.steps[i].stepName;
+                inputStepHint.value = hunt.steps[i].stepHint;
+                createStep();
+                placePointsAuto(hunt.steps[i].points[0],hunt.steps[i].points[1]);
+            }
+            inputStepName.value = "";
+            inputStepHint.value = "";
+        }
+    })
+})
+.catch(error => {
+    console.error('Erreur lors de la requête :', error);
+});
 
 
 buttonStepValidation.addEventListener("click",createStep);
@@ -189,12 +230,33 @@ function validateMap() {
         mapForm.appendChild(tablePoints);
         placingPoints = true;
         arnaque.style = "";
+        mapPoints.style.position = "absolute";
+        mapPoints.style.left = mapOutput.offsetLeft + "px";
+        mapPoints.style.top = (mapOutput.offsetTop) + "px";
     }
 }
 
 function placePoints(e) {
     if (placingPoints && listPointsMap.length < listSteps.length) {
-        listPointsMap.push([e.clientX-320,e.clientY-100])
+        listPointsMap.push([e.clientX-5-mapOutput.offsetLeft,e.clientY-5-mapOutput.offsetTop])
+
+        newPointRow = document.createElement("tr");
+        rowNumber = document.createElement("th");
+        rowNumber.innerText = tablePoints.children.length+1;
+        pointNumber = document.createElement("th");
+        pointNumber.innerText = tablePoints.children.length+1;
+
+        newPointRow.appendChild(rowNumber);
+        newPointRow.appendChild(pointNumber);
+        tablePoints.appendChild(newPointRow);
+
+        showNewPoint();
+    }
+}
+
+function placePointsAuto(pointX,pointY) {
+    if (placingPoints && listPointsMap.length < listSteps.length) {
+        listPointsMap.push([pointX-5,pointY-5]);
 
         newPointRow = document.createElement("tr");
         rowNumber = document.createElement("th");
@@ -214,8 +276,10 @@ function showNewPoint() {
     var newPoint = document.createElement("div");
     newPoint.className = "points";
     newPoint.innerText = listPointsMap.length;
-    newPoint.style = "left:" + (listPointsMap[listPointsMap.length-1][0]-5) + "px; top:" + (70+listPointsMap[listPointsMap.length-1][1]) + "px;"
-    mapForm.appendChild(newPoint);
+    console.log(listPointsMap[listPointsMap.length-1]);
+    newPoint.style.top = (listPointsMap[listPointsMap.length-1][1]) + "px";
+    newPoint.style.left = (listPointsMap[listPointsMap.length-1][0]) + "px";
+    mapPoints.appendChild(newPoint);
 }
 
 function changeOrderPoints() {
@@ -227,7 +291,7 @@ function changeOrderPoints() {
             deleteButton.id = "delete" + i;
             tablePoints.children[i].appendChild(deleteButton);
             listDeletesPoints.push(deleteButton);
-            deleteButton.addEventListener("mousedown",deleteStep.bind(deleteButton));
+            deleteButton.addEventListener("mousedown",deletePoint.bind(deleteButton));
 
             if (i != 0) {
                 var upButton = document.createElement("button");
@@ -312,7 +376,7 @@ function pointGoDown() {
     changeOrderPoints();
 }
 
-function deleteStep() {
+function deletePoint() {
     changeOrderPoints();
     let char = this.id;
     let toDelete = "";
@@ -337,8 +401,6 @@ function sendToDB() {
     }
 
     if (allValid) {
-        var id = 0;
-        const url = "http://localhost:3000/api/chasses/"+id+"/addStep";
         var data = {};
         data["steps"] = [];
         data["steps"].push({});

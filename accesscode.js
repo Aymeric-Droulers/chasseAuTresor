@@ -1,7 +1,7 @@
 var Join = document.getElementById("Join");
 var Codealert = document.getElementById("Codealert");
-
 var Code = document.getElementById("Code");
+
 Codealert.style.display = "none";
 Join.addEventListener("click", async () => {
     try {
