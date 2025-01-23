@@ -432,3 +432,60 @@ function sendToDB() {
         }
     }
 }
+
+const downloadPdfButton = document.getElementById('downloadPdf');
+const steps = []; // Assurez-vous que cette liste contient vos étapes
+
+// Ajouter une étape
+document.getElementById('validateStep').addEventListener('click', () => {
+  const stepName = document.getElementById('stepName').value.trim();
+  const stepHint = document.getElementById('stepHint').value.trim();
+
+  if (stepName && stepHint) {
+    steps.push({ name: stepName, hint: stepHint });
+    updateStepTable();
+    document.getElementById('stepName').value = '';
+    document.getElementById('stepHint').value = '';
+  } else {
+    alert('Veuillez remplir les deux champs.');
+  }
+});
+
+// Mise à jour de la table des étapes
+function updateStepTable() {
+  const tableSteps = document.getElementById('tableSteps');
+  tableSteps.innerHTML = '';
+  steps.forEach((step, index) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${index + 1}</td><td>${step.name}</td><td>${step.hint}</td>`;
+    tableSteps.appendChild(row);
+  });
+}
+
+// Fonction pour générer et télécharger le PDF
+downloadPdfButton.addEventListener('click', async () => {
+  if (steps.length === 0) {
+    alert('Veuillez ajouter des étapes avant de télécharger.');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  for (let i = 0; i < steps.length; i++) {
+    const step = steps[i];
+
+    // Générer une URL dynamique pour l'indice
+    const pageURL = `https://mon-site.com/indice.html?step=${encodeURIComponent(step.hint)}`;
+    const qrCodeData = await QRCode.toDataURL(pageURL);
+
+    // Ajouter QR code et texte dans le PDF
+    doc.text(`Étape ${i + 1}: ${step.name}`, 10, 10 + i * 30);
+    doc.addImage(qrCodeData, 'PNG', 10, 20 + i * 30, 50, 50);
+
+    if (i < steps.length - 1) doc.addPage(); // Ajouter une page pour chaque étape sauf la dernière
+  }
+
+  doc.save('chasse_au_tresor.pdf');
+});
+

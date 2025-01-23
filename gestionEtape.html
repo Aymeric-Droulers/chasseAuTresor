@@ -6,6 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Gestion étapes</title>
     <link rel="stylesheet" href="gestionEtape.css">
+    <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+
 </head>
 
 <body>
@@ -57,6 +60,8 @@
         <input type="button" value="Valider toutes les étapes" id="validateAll" class="button">
         <div id="errorBox"></div>
         <div id="mapPoints"></div>
+        <input type="button" value="Télécharger le PDF des QR Codes" id="downloadPdf" class="button">
+
     </main>
     <script src="gestionEtape.js"></script>
     <footer class="footer">
