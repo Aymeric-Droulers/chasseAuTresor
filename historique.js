@@ -1,15 +1,109 @@
-let baseTemporaire = [];
+let baseTemporaire = [
+]
+
+let url;
+
+const urlParams = new URLSearchParams(window.location.search);
+const userId = urlParams.get('userId');
+if(!userId){
+    window.location.href = `login.html`;
+}
+
+let listeChasses = {
+    joués : [],
+    crées : [],
+};
+
+//Recuperation des chasses joués par l'utilisateur.
+url=`http://localhost:3000/api/accounts/${userId}`;
+fetch(url, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`);
+    }
+    return response.json();
+})
+.then(user => {
+    listeChasses.joués = user.chassesParticipated;
+    listeChasses.crées = user.chassesCreated;
+})
+.catch(error => {
+    console.error('Erreur lors de la requête :', error);
+});
+
+//Recuperation des informations de ces chasses et ajout a l'array basetemporaire
+
+
+url="http://localhost:3000/api/chasses";
+fetch(url, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`);
+    }
+    return response.json();
+})
+.then(hunts => {
+    hunts.forEach(hunt => {
+        if (listeChasses.joués.includes(hunt._id) || listeChasses.crées.includes(hunt._id)) {
+            let teamName;
+            hunt.playingTeams.forEach(team => {
+                if (team.teamPlayersIds.includes(userId)){
+                    teamName = team.teamName;
+                }
+            });
+            let temp = {
+                type : "",
+                startDate : hunt.startDate.substring(0,10),
+                name : hunt.name,
+                teamName : teamName,
+                nbTeams : hunt.nbTeams,
+                duration : `${Math.floor(hunt.duration/60)}h${hunt.duration%60}`,
+                place : hunt.place,
+            }
+            if (listeChasses.joués.includes(hunt._id)){
+                temp.type = "jouée";
+            }
+            else{
+                temp.type = "crée";
+            }
+            baseTemporaire.push(temp);
+        }
+    })
+    initHistoList();
+})
+.catch(error => {
+    console.error('Erreur lors de la requête :', error);
+});
+
 
 function initHistoList(){
+    console.log("test1");
     let HistoDiv = document.getElementById("Histo");
     for(let j = 0; j<baseTemporaire.length; j++){
+        console.log("test2");
         let elemHisto = document.createElement("div");
         elemHisto.classList.add("elemHisto");
         elemHisto.classList.add("itemHisto");
         let dateChasseHisto = document.createElement("div");
         dateChasseHisto.classList.add("dateChasseHisto");
         dateChasseHisto.classList.add("itemHisto");
-        dateChasseHisto.innerText = `Chasse du ${baseTemporaire[j].startDate.substring(0,10)}`;
+        if (baseTemporaire[j].type == "crée"){
+            dateChasseHisto.classList.add("chasseCrée");
+        }
+        else {
+            dateChasseHisto.classList.add("chasseJouée");
+        }
+        dateChasseHisto.innerText = `Chasse du ${baseTemporaire[j].startDate}`;
         let nomChasseHisto = document.createElement("div");
         nomChasseHisto.classList.add("nomChasseHisto");
         nomChasseHisto.classList.add("itemHisto");
@@ -38,11 +132,3 @@ function initHistoList(){
         HistoDiv.append(elemHisto);       
     }
 }
-
-
-function initArray(){
-    
-}
-
-
-initHistoList();
