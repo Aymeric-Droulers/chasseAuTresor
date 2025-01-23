@@ -4,7 +4,7 @@ const cors = require('cors');
 const session = require('express-session');
 const path = require('path');
 const { connectDB } = require('./config/db');
-const userRoutes = require('./routes/userRoutes');
+//const userRoutes = require('./routes/userRoutes');
 const routes = require('./routes/routes');
 
 const app = express();
@@ -34,7 +34,6 @@ app.use(session({
 }));
 
 // 5. Brancher les routes API
-app.use('/api', userRoutes);
 app.use('/api', routes);
 
 // 6. Servir les fichiers statiques
