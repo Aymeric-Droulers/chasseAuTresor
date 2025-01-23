@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 const { getAllUsers,getUserById,addAccount, getUserByMail} = require('../controllers/userControllers');
 const {getAllChasses, getChasseById, addChasse,getChasseSteps,getChasseStep, addStep, getChasseTeams, getChasseTeam,
-    editChasse, getPlayerList, getPlayerInPlayerList, addPlayer, addTeam
+    editChasse, getPlayerList, getPlayerInPlayerList, addPlayer, addTeam, getTeamProgress
 }=require('../controllers/chasseControllers');
 const {login, logout} = require("../controllers/authControllers");
 
@@ -32,6 +32,7 @@ router.get('/chasses/:id/allTeams/:team',getChasseTeam);
 router.get('/chasses/:id/allTeams/:team/playerList',getPlayerList);
 router.get('/chasses/:id/allTeams/:team/playerList/:player',getPlayerInPlayerList);
 router.post('/chasses/:id/allTeams/:team/addPlayer',addPlayer)
+router.get('/chasseS/:id/allTeams/:team/teamProgress',getTeamProgress)
 router.post('/chasses/addChasse', addChasse);
 
 

@@ -104,7 +104,6 @@ exports.getChasseTeam = async (req, res) => {
     return res.status(200).json(result.content);
 }
 
-
 /*
 * Ajoute une chasse avec les infos de base
 * */
@@ -143,7 +142,6 @@ exports.addChasse = async (req, res) => {
         res.status(500).json(err);
     }
 }
-
 
 /*
  Modifie une chasse avec les infos de base
@@ -189,7 +187,6 @@ exports.editChasse = async (req, res) => {
         res.status(500).json(err);
     }
 }
-
 
 /*
 Ajoute une etape a une chasse
@@ -241,7 +238,6 @@ exports.addStep = async (req, res) => {
         res.status(500).json(err);
     }
 }
-
 
 /*
 * récupère la liste des joueurs et leurs données
@@ -366,7 +362,21 @@ exports.addPlayer = async (req, res) => {
     }
     console.log("player added");
     res.status(201).json({status:true, message: "Joueur ajoutée" });
-
-
-
 }
+
+exports.getTeamProgress = async (req, res) => {
+    const {id,team} = req.params;
+    const chasse = await getChasseById(id);
+    const teamProgress=chasse.playingTeams[team-1].teamProgress;
+    let completedSteps= 0;
+    for(let i=0;i<teamProgress.length;i++){
+        console.log(teamProgress[i]);
+        if(teamProgress[i].reached){
+            completedSteps++;
+        }
+    }
+
+    return res.status(200).json({status:true, completedSteps:completedSteps});
+}
+
+
