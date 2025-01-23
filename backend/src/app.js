@@ -14,7 +14,7 @@ const app = express();
 connectDB();
 
 // 2. Middleware pour parser le JSON
-app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
 
 // 3. Configuration CORS
 app.use(cors({

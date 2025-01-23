@@ -13,38 +13,40 @@ exports.login = async (req, res) => {
     let mail=req.body.email;
     let password=req.body.password;
     // Authenticate user
-    if (await isCorrect(mail, password)) {
+    let account = await getAccount(mail,password);
+    if (account) {
         req.session.isLoggedIn = true;
         req.session.mail = mail;
+        req.session.user_id=account._id;
         req.session.save((err) => {
             if (err) {
                 console.error("Erreur lors de la sauvegarde de la session :", err);
             } else {
-                console.log("Session sauvegardée :", req.session);
                 res.json({ message: 'Connexion réussie' });
             }
         });
     } else {
-        console.log("Connexion échouée");
         res.status(401).json({ message: 'Mail ou mot de passe incorrect' })
     }
 }
 
-async function isCorrect(mail,password) {
+async function getAccount(mail,password) {
     let data = await getAccountByMail(mail);
-    return (data.password === password);
+    if(data !==null && data.password === password){
+        return data;
+    }
+    return null;
 }
 
 exports.getSession = async (req, res) => {
     console.log(req.session);
     if (req.session.isLoggedIn) {
-        console.log("OMG ON EST CONNECTE C'EST UNE FOLIE");
         res.json({
             isLoggedIn: req.session.isLoggedIn,
-            mail: req.session.mail
+            mail: req.session.mail,
+            user_id: req.session.user_id,
         });
     } else {
-        console.log("PUTAIN SA GRAND MERE CA A FOIRE");
         res.status(401).json({ message: 'Utilisateur non connecté' });
     }
 }

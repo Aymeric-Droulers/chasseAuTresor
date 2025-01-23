@@ -14,10 +14,10 @@ fetch(url, {
     })
     .then(data => {
         console.log(data);
-    });
-
-
-
+    }).catch(error => {
+        console.error('Erreur lors de la requête:', error);
+        window.location.assign("accueil.html");
+    })
 
 
 document.querySelector('form').addEventListener('submit', async function(event) {
@@ -62,7 +62,7 @@ document.querySelector('form').addEventListener('submit', async function(event) 
         } catch (error) {
             console.error('Erreur lors de la requête:', error);
         }
-        
+
     }
     await fetchDataAndProcess();
 
@@ -117,14 +117,36 @@ document.querySelector('form').addEventListener('submit', async function(event) 
     });
 
     console.log(data);
-    //if(ok == true){
-        const url = "http://localhost:3000/api/chasses/addChasse";
-        fetch(url, {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-            body: JSON.stringify(data),
+    const getUrl = 'http://localhost:3000/api/session';
+    const postUrl = 'http://localhost:3000/api/chasses/addChasse';
+
+    fetch(getUrl, {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+            'Content-Type': 'application/json'
+        }
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(session_data => {
+            console.log('Données de la session:', data);
+
+            // Préparez les données pour la requête POST
+            console.log(session_data);
+            data["owner"]=session_data["user_id"];
+            console.log(data);
+            return fetch(postUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            });
         })
         .then(response => {
             if (!response.ok) {
@@ -133,10 +155,10 @@ document.querySelector('form').addEventListener('submit', async function(event) 
             return response.json();
         })
         .then(data => {
-            console.log('Réponse du serveur :', data);
+            console.log('Réponse du serveur:', data);
         })
         .catch(error => {
-            console.error('Erreur lors de la requête :', error);
+            console.error('Erreur lors de la requête:', error);
         });
         window.location.assign("menu_admin.html");
     //}

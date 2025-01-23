@@ -1,12 +1,9 @@
-let user_id = "678e787112a848a6dba28745";
-const url_accounts = "http://localhost:3000/api/accounts";
-const url_hunts = "http://localhost:3000/api/chasses";
-let chassesCreated = [];
-let selected_hunt_id = null;
-
-// Récupérer les données du compte
-fetch(`${url_accounts}/${user_id}`, {
+let user_id = null;
+// check if user is connected
+url="http://localhost:3000/api/session"
+fetch(url, {
     method: 'GET',
+    credentials:'include',
     headers: {
         'Content-Type': 'application/json'
     },
@@ -17,40 +14,64 @@ fetch(`${url_accounts}/${user_id}`, {
         }
         return response.json();
     })
-    .then(account => {
-        chassesCreated = account.chassesCreated;
-        return fetch(url_hunts, {
-            method: 'GET',
-            headers: {
-                'Content-Type': 'application/json'
-            },
-        });
-    })
+    .then(data => {
+        console.log(data);
+    }).catch(error => {
+    console.error('Erreur lors de la requête:', error);
+    window.location.assign("accueil.html");
+});
+
+const url_accounts = "http://localhost:3000/api/accounts";
+const url_hunts = "http://localhost:3000/api/chasses";
+let chassesCreated = [];
+let selected_hunt_id = null;
+
+fetch("http://localhost:3000/api/session", {
+    method: 'GET',
+    credentials: 'include',
+    headers: {
+        'Content-Type': 'application/json'
+    }
+})
     .then(response => {
         if (!response.ok) {
             throw new Error(`Erreur HTTP : ${response.status}`);
         }
         return response.json();
     })
-    .then(hunts => {
-        const huntSelect = document.getElementById('hunt-select');
-        hunts.forEach(hunt => {
-            if (chassesCreated.includes(hunt._id)) {
-                const option = document.createElement('option');
-                option.value = hunt._id;
-                option.textContent = hunt.name;
-                huntSelect.appendChild(option);
-            }
-        });
-        updateHuntInfos(hunts);
-        // Add an event listener to update hunt infos when infos change
-        huntSelect.addEventListener('change', function() {
-            updateHuntInfos(hunts);
-        });
+    .then(session_data => {
+        user_id = session_data.user_id;
+
+        fetch(`${url_hunts}`, {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+        })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(hunts => {
+                const huntSelect = document.getElementById('hunt-select');
+                hunts.forEach(hunt => {
+                    if (hunt.owner === user_id) {
+                        console.log(hunt);
+                        const option = document.createElement('option');
+                        option.value = hunt._id;
+                        option.textContent = hunt.name;
+                        huntSelect.appendChild(option);
+                    }
+                });
+                updateHuntInfos(hunts);
+                // Add an event listener to update hunt infos when infos change
+                huntSelect.addEventListener('change', function() {
+                    updateHuntInfos(hunts);
+                });
+            });
     })
-    .catch(error => {
-        console.error('Erreur lors de la requête :', error);
-    });
 
 function formatDateToReadable(isoDate) {
     const date = new Date(isoDate);
