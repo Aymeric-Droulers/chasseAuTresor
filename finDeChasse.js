@@ -6,8 +6,7 @@ var tableClassement = document.getElementById("classement");
 let id = 0; // Somehow get the hunt id
 const url = "http://localhost:3000/api/chasses";
 var hunt;
-var teamNameList = document.createElement("tr");
-var teamPlayersList = document.createElement("tr");
+
 
 fetch(url, {
     method: 'GET',
@@ -22,6 +21,9 @@ fetch(url, {
     return response.json();
 })
 .then(data => {
+    var teamNameList = document.createElement("tr");
+    var teamPlayersList = document.createElement("tr");
+
     hunt = data[id];
     console.log(hunt);
     titre.innerText = "La chasse " + hunt.name + " est terminée.";
@@ -51,6 +53,9 @@ fetch(url, {
         newTeamName.innerText = hunt.playingTeams[i].teamName;
         teamNameList.appendChild(newTeamName);
 
+        var newTeamNameProgression = document.createElement("th");
+        newTeamNameProgression.innerText = hunt.playingTeams[i].teamName;
+
         var team = hunt.playingTeams[i].teamPlayersIds;
         var stringTeamMembers = "";
         for (let j = 0; j < hunt.playingTeams[i].teamPlayersIds.length; j++) {
@@ -67,7 +72,7 @@ fetch(url, {
         var newPlace = document.createElement("th");
         newPlace.innerText = i+1;
         teamProgression.appendChild(newPlace);
-        teamProgression.appendChild(newTeamName);
+        teamProgression.appendChild(newTeamNameProgression);
         for (let j = 0; j < hunt.playingTeams[i].teamProgress.length; j++) {
             if (hunt.playingTeams[i].teamProgress[j].reached) {
                 nbStepsCompleted[i] += 1;
