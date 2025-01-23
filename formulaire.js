@@ -21,8 +21,7 @@ fetch(url, {
 
 
 document.querySelector('form').addEventListener('submit', async function(event) {
-    event.preventDefault(); // Empêche l'envoi du formulaire
-    ok = true;
+    event.preventDefault(); // Empêche l'envoi du formulairepar défaut
     const formData = new FormData(event.target);
 
     const data = {};
