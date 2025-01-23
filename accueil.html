@@ -23,26 +23,7 @@
             <a href="historique.html" class="nav-link">Historique</a>
            
 
-            <button id="logoutBtn">Se déconnecter</button>
-            <script>
-              document.getElementById('logoutBtn').addEventListener('click', async () => {
-                fetch('http://localhost:3000/api/logout', {
-                  method: 'POST',
-                  credentials: 'include'  // IMPORTANT : envoie le cookie
-                })
-                .then(response => {
-                  if (response.ok) return response.json();
-                  throw new Error('Erreur lors de la déconnexion');
-                })
-                .then(data => {
-                  alert(data.message); // ex: “Déconnecté !”
-                  window.location.href = 'login.html';
-                })
-                .catch(err => {
-                  alert(err.message);
-                });
-              });
-            </script>
+            
 
         </nav>
         <img src="images/connexion.png" alt="Connexion" class="login-logo" id="Connexion">
@@ -70,7 +51,7 @@
                 captivante,
                 Lockéo transforme chaque lieu en terrain d’aventure.
                 <div class="event-button-container">
-                    <a href="evenements-alentours.html" class="event-button">Voir les chasses aux alentours</a>
+                    <a href="listing.html" class="event-button">Voir les chasses aux alentours</a>
                 </div>
             </div>
         </div>
