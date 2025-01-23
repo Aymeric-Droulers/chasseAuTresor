@@ -1,9 +1,15 @@
+//const { addTeam, getAllTeams } = require('../controllers/chasseControllers');
+const { joinTeamByCode } = require('../controllers/chasseControllers');
+
+
 // src/routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
-const { getAllUsers,getUserById,addAccount, getUserByMail, getUserChassesParticipated, getUserChassesCreated} = require('../controllers/userControllers');
+const { getAllUsers,getUserById,addAccount, getUserByMail, getUserChassesParticipated, getUserChassesCreated,
+    addChasseParticipated, addChasseCreated
+} = require('../controllers/userControllers');
 const {getAllChasses, getChasseById, addChasse,getChasseSteps,getChasseStep, addStep, getChasseTeams, getChasseTeam,
-    editChasse, getPlayerList, getPlayerInPlayerList, addPlayer, addTeam, getTeamProgress , getAllTeams , joinTeamByCode
+    editChasse, getPlayerList, getPlayerInPlayerList, addPlayer, addTeam, getTeamProgress
 }=require('../controllers/chasseControllers');
 const {login, logout} = require("../controllers/authControllers");
 
@@ -13,18 +19,19 @@ const {login, logout} = require("../controllers/authControllers");
 router.post('/login', login);
 router.post('/logout', logout);
 
-//  /api/users>
+//  /api/users
 router.get('/accounts', getAllUsers);
 router.post('/accounts/addAccount', addAccount);
 router.get('/accounts/:id', getUserById);
 router.get("/accounts/getByMail/:mail",getUserByMail);
 router.get("/accounts/:id/allChassesParticipated", getUserChassesParticipated);
 router.get("/accounts/:id/allChassesCreated", getUserChassesCreated);
-
-router.post('/teams', addTeam); // Ajoute une équipe sans référence à une chasse
+router.post("/accounts/:id/addChasseParticipated",addChasseParticipated);
+router.post("/accounts/:id/addChasseCreated",addChasseCreated);
+/*router.post('/teams', addTeam); // Ajoute une équipe sans référence à une chasse
 router.get('/teams', getAllTeams); // Récupère toutes les équipes
 router.post('/teams/join', joinTeamByCode); // Route pour rejoindre une équipe avec un code
-
+*/
 
 
 //   /api/chasses

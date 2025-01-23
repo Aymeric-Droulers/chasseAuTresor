@@ -101,3 +101,68 @@ exports.getUserChassesCreated = async (req, res) => {
         return res.status(500).json(err);
     }
 }
+
+exports.addChasseParticipated = async (req, res) => {
+    let id=req.params.id;
+    let chasseId=req.body.id;
+
+    id= new ObjectId(id);
+
+
+    let account = await funcGetUserById(id);
+    account = account.content;
+    if(!account){
+        res.status(404).json({error: 'Account not found'});
+    }
+    let chassesParticipated =account.chassesParticipated;
+    if(chassesParticipated.includes(chasseId)){
+        return res.status(400).json({error: 'Chasse already in list'});
+    }
+    chassesParticipated.push(chasseId);
+    account.chassesParticipated=chassesParticipated;
+
+    //requette de mise à jour:
+    const db = getDB();
+    const result = await db.collection('Accounts').updateOne(
+        {_id: id},
+        {$set:{"chassesParticipated":chassesParticipated}},
+    )
+    if (result.modifiedCount === 0) {
+        return res.status(500).json({ message: "Failed to add chasse to the player" });
+    }
+    res.status(201).json({status:true, message: "Chasse Added" });
+
+}
+
+
+exports.addChasseCreated = async (req, res) => {
+    let id=req.params.id;
+    let chasseId=req.body.id;
+
+    id= new ObjectId(id);
+
+
+    let account = await funcGetUserById(id);
+    account = account.content;
+    if(!account){
+        res.status(404).json({error: 'Account not found'});
+    }
+    let chassesCreated =account.chassesCreated;
+    if(chassesCreated.includes(chasseId)){
+        return res.status(400).json({error: 'Chasse already in list'});
+    }
+    chassesCreated.push(chasseId);
+    account.chassesCreated=chassesCreated;
+
+    //requette de mise à jour:
+    const db = getDB();
+    const result = await db.collection('Accounts').updateOne(
+        {_id: id},
+        {$set:{"chassesCreated":chassesCreated}},
+    )
+    if (result.modifiedCount === 0) {
+        return res.status(500).json({ message: "Failed to add chasse to the player" });
+    }
+    res.status(201).json({status:true, message: "Chasse Added" });
+
+}
