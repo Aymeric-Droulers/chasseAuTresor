@@ -112,7 +112,7 @@ exports.addChasseParticipated = async (req, res) => {
     let account = await funcGetUserById(id);
     account = account.content;
     if(!account){
-        res.status(404).json({error: 'Account not found'});
+        return res.status(404).json({error: 'Account not found'});
     }
     let chassesParticipated =account.chassesParticipated;
     if(chassesParticipated.includes(chasseId)){
@@ -145,7 +145,7 @@ exports.addChasseCreated = async (req, res) => {
     let account = await funcGetUserById(id);
     account = account.content;
     if(!account){
-        res.status(404).json({error: 'Account not found'});
+        return res.status(404).json({error: 'Account not found'});
     }
     let chassesCreated =account.chassesCreated;
     if(chassesCreated.includes(chasseId)){
