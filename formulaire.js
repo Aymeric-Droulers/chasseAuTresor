@@ -23,7 +23,7 @@ fetch(url, {
 document.querySelector('form').addEventListener('submit', async function(event) {
     event.preventDefault(); // Empêche l'envoi du formulairepar défaut
     const formData = new FormData(event.target);
-
+    ok = true;
     const data = {};
     formData.forEach((value, key) => {
         data[key] = value;
