@@ -5,7 +5,7 @@ const { joinTeamByCode } = require('../controllers/chasseControllers');
 // src/routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
-const { getAllUsers,getUserById,addAccount, getUserByMail} = require('../controllers/userControllers');
+const { getAllUsers,getUserById,addAccount, getUserByMail, getUserChassesParticipated, getUserChassesCreated} = require('../controllers/userControllers');
 const {getAllChasses, getChasseById, addChasse,getChasseSteps,getChasseStep, addStep, getChasseTeams, getChasseTeam,
     editChasse, getPlayerList, getPlayerInPlayerList, addPlayer, addTeam, getTeamProgress
 }=require('../controllers/chasseControllers');
@@ -22,6 +22,8 @@ router.get('/accounts', getAllUsers);
 router.post('/accounts/addAccount', addAccount);
 router.get('/accounts/:id', getUserById);
 router.get("/accounts/getByMail/:mail",getUserByMail);
+router.get("/accounts/:id/allChassesParticipated", getUserChassesParticipated);
+router.get("/accounts/:id/allChassesCreated", getUserChassesCreated);
 
 router.post('/teams', addTeam); // Ajoute une équipe sans référence à une chasse
 router.get('/teams', getAllTeams); // Récupère toutes les équipes
