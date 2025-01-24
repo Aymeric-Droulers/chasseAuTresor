@@ -1,12 +1,16 @@
 const {getDB} = require("../config/db");
 const {ObjectId} = require("mongodb");
 exports.funcGetUserById = async (id)=>{
-    const DB = await getDB();
-    const objectId = new ObjectId(id);
-    const account = await DB.collection('Accounts').findOne({_id:objectId});
+    try {
+        const DB = await getDB();
+        const objectId = new ObjectId(id);
+        const account = await DB.collection('Accounts').findOne({_id: objectId});
 
-    if(!account){
-        return ({status:false,error: 'Account not found'});
+        if (!account) {
+            return ({status: false, error: 'Account not found'});
+        }
+        return ({status: true, content: account});
+    }catch(err){
+        return({status: false, error: err});
     }
-    return({status:true,content:account});
 }

@@ -1,6 +1,6 @@
 
 exports.validateChasseData = async (data)=>{
-    const {accessCode,name,nbTeams,peopleByTeam,startDate,duration,theme,place,randomDeparture,randomSteps}= data;
+    const {accessCode,name,nbTeams,peopleByTeam,startDate,duration,theme,place}= data;
 
 
     //vérification de la présence des éléments obligatoires
