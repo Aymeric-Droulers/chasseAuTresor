@@ -80,8 +80,33 @@ async function loadUserData() {
 
   } catch (error) {
     console.error('Erreur lors du chargement des données utilisateur:', error);
+    window.location.assign("accueil.html");
   }
 }
 
 // Charger les données au chargement de la page
 document.addEventListener('DOMContentLoaded', loadUserData);
+
+document.getElementById('disconnect').addEventListener('click', disconnect);
+
+function disconnect() {
+  fetch('http://localhost:3000/api/logout', {
+    method: 'POST',
+    credentials: 'include',
+    headers: {
+      'Content-Type': 'application/json'
+    }
+  })
+    .then(response => {
+      if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`);
+      }
+      return response.json();
+    })
+    .then(data => {
+      console.log(data);
+      window.location.assign("accueil.html");
+    }).catch(error => {
+      console.error('Erreur lors de la requête:')
+  })
+}
