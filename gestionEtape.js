@@ -23,6 +23,7 @@ var listDownArrows = [];
 var listDownArrowsPoints = [];
 var placingPoints = false;
 var mapToPutInDB = false;
+var hunt;
 
 const urlParams = new URLSearchParams(window.location.search);
 var huntId = urlParams.get('hunt_id');
@@ -46,14 +47,15 @@ fetch(url, {
     return response.json();
 })
 .then(hunts => {
-    hunts.forEach(hunt => {
-        if (hunt._id == huntId) {
-            console.log(hunt);
+    hunts.forEach(huntGet => {
+        if (huntGet._id == huntId) {
+            hunt = huntGet;
+            mapOutput.src = "./backend/public/maps/" + huntId + ".png";
             for (let i = 0; i < hunt.steps.length; i++) {
                 inputStepName.value = hunt.steps[i].stepName;
                 inputStepHint.value = hunt.steps[i].stepHint;
                 createStep();
-                placePointsAuto(hunt.steps[i].points[0],hunt.steps[i].points[1]);
+                //placePointsAuto(hunt.steps[i].points[0],hunt.steps[i].points[1]);
             }
             inputStepName.value = "";
             inputStepHint.value = "";
@@ -63,34 +65,6 @@ fetch(url, {
 .catch(error => {
     console.error('Erreur lors de la requête :', error);
 });
-
-url = "http://localhost:3000/api/chasses/" + hunt._id + "/getMapImg";
-
-fetch(url, {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-})
-.then(response => {
-    if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`);
-    }
-    return response.json();
-})
-.then(map => {
-    mapOutput.src = map;
-})
-.catch(error => {
-    console.error('Erreur lors de la requête :', error);
-});
-
-if (hunt.steps.length != 0) {
-    mapToPutInDB = true;
-}
-else {
-    mapOutput.src = hunt.mapFile;
-}
 
 buttonStepValidation.addEventListener("click",createStep);
 buttonStepsChangeOrder.addEventListener("click",changeOrder);
