@@ -2,6 +2,7 @@ const { getAccountByMail } = require('../utils/getAccountByMail');
 
 exports.validateAccountData =async (data) => {
     const {name, password, mail} = data;
+    console.log(data);
     if (!name || !password || !mail) {
         return ({status: false, message: "Le nom et l'email sont requis."});
     }

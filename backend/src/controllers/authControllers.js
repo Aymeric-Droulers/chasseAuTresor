@@ -1,4 +1,5 @@
 const {getAccountByMail} = require("../utils/getAccountByMail");
+
 exports.logout = (req, res) => {
     req.session.destroy(err => {
         if (err) {
@@ -8,6 +9,8 @@ exports.logout = (req, res) => {
         return res.json({ message: 'Déconnecté !' });
     });
 }
+
+
 
 exports.login = async (req, res) => {
     let mail=req.body.email;
@@ -29,6 +32,7 @@ exports.login = async (req, res) => {
         res.status(401).json({ message: 'Mail ou mot de passe incorrect' })
     }
 }
+
 
 async function getAccount(mail,password) {
     let data = await getAccountByMail(mail);

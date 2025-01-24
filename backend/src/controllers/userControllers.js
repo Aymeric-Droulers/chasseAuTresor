@@ -52,8 +52,11 @@ exports.getUserByMail = async (req, res) => {
 exports.addAccount = async (req, res) => {
     try {
         const { name,password, mail,description } = req.body;
+        console.log(name);
+        console.log(req.body);
         const validation = await validateAccountData(req.body);
         if(!validation.status){
+            console.log(validation.message);
             return res.status(400).json({status:false,message:validation.message});
         }
 
@@ -61,7 +64,7 @@ exports.addAccount = async (req, res) => {
             "name": name,
             "password":password,
             "mail":mail,
-            "description":description,
+            "description":""||description,
             "chassesParticipated":[],
             "chassesCreated":[]
         }

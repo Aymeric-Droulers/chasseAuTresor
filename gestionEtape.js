@@ -23,12 +23,12 @@ var listDownArrows = [];
 var listDownArrowsPoints = [];
 var placingPoints = false;
 var mapToPutInDB = false;
+var hunt;
 
 const urlParams = new URLSearchParams(window.location.search);
 var huntId = urlParams.get('hunt_id');
 if (!huntId) {
-    //window.location.href = "accueil.html";
-    window.location.href = "gestionEtape.html?hunt_id=678f6541897e114b88f2e497";
+    window.location.href = "accueil.html";
 }
 
 var url = "http://localhost:3000/api/chasses/";
@@ -48,49 +48,42 @@ fetch(url, {
 .then(hunts => {
     hunts.forEach(hunt => {
         if (hunt._id == huntId) {
-            console.log(hunt);
+            //mapOutput.src = "./backend/public/maps/" + huntId + ".png";
             for (let i = 0; i < hunt.steps.length; i++) {
                 inputStepName.value = hunt.steps[i].stepName;
                 inputStepHint.value = hunt.steps[i].stepHint;
                 createStep();
-                placePointsAuto(hunt.steps[i].points[0],hunt.steps[i].points[1]);
+                //placePointsAuto(hunt.steps[i].points[0],hunt.steps[i].points[1]);
             }
             inputStepName.value = "";
             inputStepHint.value = "";
+
+            /*url = "http://localhost:3000/api/chasses/"+huntId+"/getMapImg";
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json/image'
+                },
+                })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(map => {
+                mapInput.files.push(map);
+            })
+            .catch(error => {
+                console.error('Erreur lors de la requête :', error);
+            });*/
         }
     })
 })
 .catch(error => {
     console.error('Erreur lors de la requête :', error);
 });
-
-url = "http://localhost:3000/api/chasses/" + hunt._id + "/getMapImg";
-
-fetch(url, {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-})
-.then(response => {
-    if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`);
-    }
-    return response.json();
-})
-.then(map => {
-    mapOutput.src = map;
-})
-.catch(error => {
-    console.error('Erreur lors de la requête :', error);
-});
-
-if (hunt.steps.length != 0) {
-    mapToPutInDB = true;
-}
-else {
-    mapOutput.src = hunt.mapFile;
-}
 
 buttonStepValidation.addEventListener("click",createStep);
 buttonStepsChangeOrder.addEventListener("click",changeOrder);
@@ -256,7 +249,9 @@ function validateMap() {
         }
     }
     if (!isEmpty) {
-        mapInput.remove();
+        //mapInput.remove();
+        mapInput.style.position = "absolute";
+        mapInput.style.left = "1000000px";
         buttonMapValidation.remove();
         tablePoints = document.createElement("table");
         mapForm.appendChild(tablePoints);
@@ -270,7 +265,7 @@ function validateMap() {
 
 function placePoints(e) {
     if (placingPoints && listPointsMap.length < listSteps.length) {
-        listPointsMap.push([e.clientX-5-mapOutput.offsetLeft,e.clientY-5-mapOutput.offsetTop+57.5])
+        listPointsMap.push([e.clientX-5-mapOutput.offsetLeft,e.clientY-5-mapOutput.offsetTop+window.scrollY]);
 
         newPointRow = document.createElement("tr");
         rowNumber = document.createElement("th");
@@ -308,7 +303,6 @@ function showNewPoint() {
     var newPoint = document.createElement("div");
     newPoint.className = "points";
     newPoint.innerText = listPointsMap.length;
-    console.log(listPointsMap[listPointsMap.length-1]);
     newPoint.style.top = (listPointsMap[listPointsMap.length-1][1]) + "px";
     newPoint.style.left = (listPointsMap[listPointsMap.length-1][0]) + "px";
     mapPoints.appendChild(newPoint);
@@ -433,15 +427,14 @@ function sendToDB() {
     }
 
     if (allValid) {
+        url = "http://localhost:3000/api/chasses/" + huntId + "/addStep";
         var data = {};
-        data["steps"] = [];
-        data["steps"].push({});
-        //data["map"] = mapOutput.src;
         for (let i = 0; i < listSteps.length; i++) {
-            data["steps"][0]["stepId"] = i;
-            data["steps"][0]["stepName"] = listSteps[i][0];
-            data["steps"][0]["stepHint"] = listSteps[i][1];
-            data["steps"][0]["points"] = listPointsMap[i];
+            data["stepId"] = i;
+            data["stepName"] = listSteps[i][0];
+            data["stepHint"] = listSteps[i][1];
+            data["stepCode"] = i+1;
+            data["points"] = listPointsMap[i];
             fetch(url, {
                 method: 'POST',
                 headers: {
@@ -462,6 +455,26 @@ function sendToDB() {
                 console.error('Erreur lors de la requête :', error);
             });
         }
+        /*url = "http://localhost:3000/api/chasses/" + huntId + "/addMap";
+        fetch(url, {
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: ,
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Réponse du serveur :', data);
+        })
+        .catch(error => {
+            console.error('Erreur lors de la requête :', error);
+        });*/
     }
 }
 
@@ -493,31 +506,30 @@ function updateStepTable() {
     tableSteps.appendChild(row);
   });
 }
-
 // Fonction pour générer et télécharger le PDF
 downloadPdfButton.addEventListener('click', async () => {
-  if (steps.length === 0) {
-    alert('Veuillez ajouter des étapes avant de télécharger.');
-    return;
-  }
-
-  const { jsPDF } = window.jspdf;
-  const doc = new jsPDF();
-
-  for (let i = 0; i < steps.length; i++) {
-    const step = steps[i];
-
-    // Générer une URL dynamique pour l'indice
-    const pageURL = `https://mon-site.com/indice.html?step=${encodeURIComponent(step.hint)}`;
-    const qrCodeData = await QRCode.toDataURL(pageURL);
-
-    // Ajouter QR code et texte dans le PDF
-    doc.text(`Étape ${i + 1}: ${step.name}`, 10, 10 + i * 30);
-    doc.addImage(qrCodeData, 'PNG', 10, 20 + i * 30, 50, 50);
-
-    if (i < steps.length - 1) doc.addPage(); // Ajouter une page pour chaque étape sauf la dernière
-  }
-
-  doc.save('chasse_au_tresor.pdf');
-});
-
+    if (steps.length === 0) {
+      alert('Veuillez ajouter des étapes avant de télécharger.');
+      return;
+    }
+  
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+  
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i];
+  
+      // Générer une URL dynamique pour l'indice
+      const pageURL = `http://localhost:5500/indice.html?step=${encodeURIComponent(step.hint)}`;
+      const qrCodeData = await QRCode.toDataURL(pageURL); // Utilisation de QRCode.toDataURL pour générer l'image
+  
+      // Ajouter QR code et texte dans le PDF sur une page distincte
+      doc.text(`Étape ${i + 1}: ${step.name}`, 10, 20); // Texte en haut de la page
+      doc.addImage(qrCodeData, 'PNG', 60, 50, 90, 90); // Position et taille du QR code
+  
+      if (i < steps.length - 1) doc.addPage(); // Ajouter une nouvelle page sauf pour la dernière étape
+    }
+  
+    doc.save('chasse_au_tresor.pdf');
+  });
+  

@@ -16,7 +16,7 @@ fetch(url, {
         console.log(data);
     }).catch(error => {
         console.error('Erreur lors de la requête:', error);
-        // window.location.assign("accueil.html");
+        window.location.assign("accueil.html");
     })
 
 
@@ -48,17 +48,6 @@ document.querySelector('form').addEventListener('submit', async function(event) 
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             const total = await response.json(); // Assigner directement les données
-
-            // Utiliser total dans la boucle
-            for(let i=0; i<total.length; i++){
-                if(data["accessCode"] == total[i]["accessCode"]){
-                    ok = false;
-                    console.log(total[i]["accessCode"])
-                    console.log(data["accessCode"])
-                    alert('Le code d accès existe déjà.')
-                    return;
-                }
-            }
         } catch (error) {
             console.error('Erreur lors de la requête:', error);
         }
@@ -154,14 +143,14 @@ document.querySelector('form').addEventListener('submit', async function(event) 
             }
             return response.json();
         })
-        .then(data => {
-            console.log('Réponse du serveur:', data);
+        .then(response => {
+            console.log('Réponse du serveur:', response);
+            window.location.href = `gestionEtape.html?hunt_id=${response.id}`;
         })
         .catch(error => {
             console.error('Erreur lors de la requête:', error);
         });
-        window.location.assign("menu_admin.html");
-    //}
+
 });
 
 document.getElementById('auto-fill').addEventListener('click', function() {

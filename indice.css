@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+15&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
+
+body {
+    font-family: 'Kanit', sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.container {
+    max-width: 600px;
+    padding: 20px 40px;
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+header h1 {
+    font-size: 36px;
+    font-weight: bold;
+    color: #8b5e34;
+    font-family: 'Jersey 15', serif;
+    margin-bottom: 20px;
+}
+
+.highlighted {
+    font-size: 20px;
+    font-weight: bold;
+    color: #c68c53;
+    background-color: #f7f7f7;
+    padding: 15px;
+    border-radius: 5px;
+    margin-bottom: 30px; /* Ajoute de l'espace sous l'indice */
+    display: inline-block;
+}
+
+.button-back {
+    display: inline-block;
+    padding: 12px 20px;
+    background-color: #c68c53;
+    color: #fff;
+    text-decoration: none;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    margin-top: 10px; /* Ajoute de l'espace entre l'indice et le bouton */
+}
+
+.button-back:hover {
+    background-color: #d9b38c;
+}
