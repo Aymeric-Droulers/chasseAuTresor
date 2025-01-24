@@ -2,9 +2,13 @@ var titre = document.getElementById("titre");
 var tableTeams = document.getElementById("listTeams");
 var tableClassement = document.getElementById("classement");
 
-
-let id = 0; // Somehow get the hunt id
-const url = "http://localhost:3000/api/chasses";
+const urlParams = new URLSearchParams(window.location.search);
+var id = urlParams.get('hunt_id');
+if (!id) {
+    //window.location.href = "accueil.html";
+    window.location.href = "finDeChasse.html?hunt_id=678f6541897e114b88f2e497";
+}
+const url = "http://localhost:3000/api/chasses/" + id;
 var hunt;
 
 
@@ -20,11 +24,12 @@ fetch(url, {
     }
     return response.json();
 })
-.then(data => {
+.then(hunt => {
     var teamNameList = document.createElement("tr");
     var teamPlayersList = document.createElement("tr");
 
-    hunt = data[id];
+    //hunt = data[id];
+
     console.log(hunt);
     titre.innerText = "La chasse " + hunt.name + " est terminée.";
 

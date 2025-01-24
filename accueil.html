@@ -21,10 +21,7 @@
             <a href="formulaire.html" class="nav-link">Créer sa chasse</a>
             <a href="listing.html" class="nav-link">Chasses aux alentours</a>
             <a href="historique.html" class="nav-link">Historique</a>
-           
-
-            
-
+            <a href="menu_admin.html" class="nav-link">Gérer ses chasses</a>
         </nav>
         <img src="images/connexion.png" alt="Connexion" class="login-logo" id="Connexion">
         <script>
@@ -74,7 +71,26 @@
         <div class="footer-bottom">
             &copy; 2025 Lockéo | Tous droits réservés
         </div>
-    </footer>    
+    </footer>
+<script>
+    url="http://localhost:3000/api/session"
+    fetch(url, {
+        method: 'GET',
+        credentials:'include',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+        }).catch(error => {
+        console.error('Erreur lors de la requête:', error);
+        // window.location.assign("accueil.html");
+    });
+</script>
 </body>
 
 </html>

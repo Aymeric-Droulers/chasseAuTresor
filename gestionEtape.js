@@ -22,6 +22,7 @@ var listUpArrowsPoints = [];
 var listDownArrows = [];
 var listDownArrowsPoints = [];
 var placingPoints = false;
+var mapToPutInDB = false;
 
 const urlParams = new URLSearchParams(window.location.search);
 var huntId = urlParams.get('hunt_id');
@@ -30,7 +31,7 @@ if (!huntId) {
     window.location.href = "gestionEtape.html?hunt_id=678f6541897e114b88f2e497";
 }
 
-const url = "http://localhost:3000/api/chasses/";
+var url = "http://localhost:3000/api/chasses/";
 
 fetch(url, {
     method: 'GET',
@@ -63,6 +64,33 @@ fetch(url, {
     console.error('Erreur lors de la requête :', error);
 });
 
+url = "http://localhost:3000/api/chasses/" + hunt._id + "/getMapImg";
+
+fetch(url, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`);
+    }
+    return response.json();
+})
+.then(map => {
+    mapOutput.src = map;
+})
+.catch(error => {
+    console.error('Erreur lors de la requête :', error);
+});
+
+if (hunt.steps.length != 0) {
+    mapToPutInDB = true;
+}
+else {
+    mapOutput.src = hunt.mapFile;
+}
 
 buttonStepValidation.addEventListener("click",createStep);
 buttonStepsChangeOrder.addEventListener("click",changeOrder);
@@ -83,6 +111,10 @@ mapInput.onchange = function(event) {
 
     reader.readAsDataURL(file);
 };
+
+window.onresize = function() {
+    mapPoints.style.left = mapOutput.offsetLeft + "px";
+}
 
 function createStep() {
     let changeBack = false;
@@ -238,7 +270,7 @@ function validateMap() {
 
 function placePoints(e) {
     if (placingPoints && listPointsMap.length < listSteps.length) {
-        listPointsMap.push([e.clientX-5-mapOutput.offsetLeft,e.clientY-5-mapOutput.offsetTop])
+        listPointsMap.push([e.clientX-5-mapOutput.offsetLeft,e.clientY-5-mapOutput.offsetTop+57.5])
 
         newPointRow = document.createElement("tr");
         rowNumber = document.createElement("th");

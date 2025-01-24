@@ -1,7 +1,7 @@
 
 
 exports.createBlankPorgress = (n) => {
-    returnList = []
+    let returnList = []
     for (let i = 0; i < n; i++) {
         returnList.push({
             "stepId":n+1,

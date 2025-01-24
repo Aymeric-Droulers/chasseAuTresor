@@ -4,11 +4,8 @@ const{validateChasseData}=require('../middleware/validateChasseData');
 const {getChasseById} = require("../utils/getChasseById");
 const {validateStepData} = require("../middleware/validateStepData");
 const {getTeamInChasseByNumber} = require("../middleware/getTeamInChasseByNumber");
-const {getAccountById} = require("../utils/getAccountById");
 const {getPlayerListFromChasseAndNumTeam} = require("../middleware/getPlayerListFromChasseAndNumTeam");
-const {createBlankPorgress} = require("../utils/createBlankPorgress");
-const {formidable}=require("formidable");
-var fs = require('fs');
+const fs = require('fs');
 const path = require("path");
 /*
 * Récupère toutes les chasses de la collection Chasses
@@ -23,11 +20,8 @@ exports.getAllChasses = async (req, res) => {
         res.status(500).json(err);
     }
 };
-
-
 /*
 * Récupère la chasse possédant l'id id*/
-
 exports.getChasseById=async (req, res) => {
     try {
         const {id} = req.params;
@@ -40,7 +34,6 @@ exports.getChasseById=async (req, res) => {
         res.status(500).json(err);
     }
 }
-
 /*
 *
 Renvoie toutes les étapes d'une chasse selon son id
@@ -53,8 +46,6 @@ exports.getChasseSteps = async (req, res) => {
     }
     res.status(200).json(chasse.steps);
 }
-
-
 /*
 *
 Renvoie toutes les équipes d'une chasse selon son id
@@ -67,12 +58,9 @@ exports.getChasseTeams = async (req, res) => {
     }
     res.status(200).json(chasse.playingTeams);
 }
-
-/**
- *
+/*
  * Récupère l'étape step de la chasse id
- *
- * */
+ */
 exports.getChasseStep = async (req, res) => {
     const {id,step} = req.params;
     const chasse = await getChasseById(id);
@@ -89,10 +77,6 @@ exports.getChasseStep = async (req, res) => {
 
     return res.status(200).json(listSteps[parseInt(step)-1]);
 }
-
-
-
-
 exports.getChasseTeam = async (req, res) => {
     const {id,team} = req.params;
     const result =await getTeamInChasseByNumber(id,team);
@@ -101,7 +85,6 @@ exports.getChasseTeam = async (req, res) => {
     }
     return res.status(200).json(result.content);
 }
-
 /*
 * Ajoute une chasse avec les infos de base
 * */
@@ -131,16 +114,16 @@ exports.addChasse = async (req, res) => {
             "playingTeams":[]
         }
         const db = getDB();
-        const result = await db.collection('Chasses').insertOne(insertData);
+        const response = await db.collection('Chasses').insertOne(insertData);
+
         console.log("chasse added");
-        res.status(201).json({status:true, message: "Chasse créée" });
+        res.status(201).json({status:true, message: "Chasse créée",id:response.insertedId });
 
 
     }catch(err) {
         res.status(500).json(err);
     }
 }
-
 /*
  Modifie une chasse avec les infos de base
 * */
@@ -185,11 +168,9 @@ exports.editChasse = async (req, res) => {
         res.status(500).json(err);
     }
 }
-
 /*
-Ajoute une etape a une chasse
+Ajoute une étape à une chasse
  */
-
 exports.addStep = async (req, res) => {
     try {
         console.log("a")
@@ -224,7 +205,7 @@ exports.addStep = async (req, res) => {
             console.log("les données ne sont pas valides");
         }else{
             const db = getDB();
-            const result = await db.collection('Chasses').updateOne(
+            await db.collection('Chasses').updateOne(
                 { _id: objectId },
                 { $set: { steps: currentSteps } }
             );
@@ -236,11 +217,9 @@ exports.addStep = async (req, res) => {
         res.status(500).json(err);
     }
 }
-
 /*
 * récupère la liste des joueurs et leurs données
 * */
-
 exports.getPlayerList = async (req, res) => {
     try {
         const {id, team} = req.params;
@@ -257,8 +236,6 @@ exports.getPlayerList = async (req, res) => {
     }
 
 }
-
-
 exports.getPlayerInPlayerList = async (req, res) => {
     const {id, team,player} = req.params;
     const resultat =await getPlayerListFromChasseAndNumTeam(id,team);
@@ -276,8 +253,6 @@ exports.getPlayerInPlayerList = async (req, res) => {
     }
 
 }
-
-
 // Ajoute une équipe sans référence à une chasse
 exports.addTeam = async (req, res) => {
     try {
@@ -298,8 +273,6 @@ exports.addTeam = async (req, res) => {
         res.status(500).json({ error: 'Erreur lors de l\'ajout de l\'équipe.' });
     }
 };
-
-
 exports.getAllTeams = async (req, res) => {
     try {
         const db = getDB();
@@ -310,8 +283,6 @@ exports.getAllTeams = async (req, res) => {
         res.status(500).json({ error: 'Erreur lors de la récupération des équipes.' });
     }
 };
-
-
 exports.addPlayer = async (req, res) => {
     let{id,team}=req.params;
     const{playerId}=req.body;
@@ -352,7 +323,6 @@ exports.addPlayer = async (req, res) => {
     console.log("player added");
     res.status(201).json({status:true, message: "Joueur ajoutée" });
 }
-
 exports.getTeamProgress = async (req, res) => {
     const {id,team} = req.params;
     const chasse = await getChasseById(id);
@@ -367,10 +337,6 @@ exports.getTeamProgress = async (req, res) => {
 
     return res.status(200).json({status:true, completedSteps:completedSteps});
 }
-
-
-
-
 exports.joinTeamByCode = async (req, res) => {
     const { teamId, accessCode } = req.body;
 
@@ -392,8 +358,6 @@ exports.joinTeamByCode = async (req, res) => {
         res.status(500).json({ message: 'Server error. Please try again later.' });
     }
 };
-
-
 exports.validateStepInProgress =async (req, res) => {
     try {
         const {id, team} = req.params;
@@ -419,72 +383,29 @@ exports.validateStepInProgress =async (req, res) => {
         return res.status(500).json({message: "Function didn't ran successfully" });
     }
 }
-
-
-
 exports.addMapImg = async (req, res) => {
-    const id= req.params.id;
-    const buffers = [];
-
-    req.on('data', (chunk) => {
-        buffers.push(chunk); // Récupère les morceaux de données envoyées
-    });
-
-    req.on('end', () => {
-        const fullBuffer = Buffer.concat(buffers);
-
-        // Exemple pour extraire des métadonnées du fichier (par défaut ici)
-        const boundary = req.headers['content-type'].split('; ')[1].split('=')[1];
-        const parts = fullBuffer.toString().split(`--${boundary}`);
-
-        const filePart = parts.find((part) =>
-            part.includes('Content-Disposition: form-data; name="file"; filename='),
-        );
-
-        if (!filePart) {
-            return res.status(400).json({ message: 'No file uploaded' });
+    try {
+        // Si le fichier est uploadé avec succès
+        if (req.file) {
+            res.status(200).json({
+                status: 'success',
+                message: 'Image uploaded successfully!',
+                file: req.file, // Retourne les informations du fichier
+            });
+        } else {
+            res.status(400).json({
+                status: 'error',
+                message: 'No file uploaded',
+            });
         }
-
-        // Extraire les métadonnées du fichier
-        const filename = filePart
-            .match(/filename="([^"]+)"/)[1]
-            .replace(/[^a-z0-9.\-_]/gi, ''); // Nettoyer le nom du fichier
-
-        // Extraire les données du fichier (après une ligne vide)
-        const fileData = filePart.split('\r\n\r\n')[1].split('\r\n--')[0];
-        const fileBuffer = Buffer.from(fileData, 'binary');
-
-        // Enregistrer le fichier sur le serveur
-        const extension = filename.split('.')[1]
-        const uploadPath = path.join(__dirname, '../../public/maps', (id+"."+extension));
-        const insertFileName = id+"."+extension;
-        console.log(uploadPath);
-
-        fs.writeFile(uploadPath, fileBuffer, (err) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: 'File upload failed' });
-            }
-
-            console.log(`File saved at ${uploadPath}`);
-            res.status(200).json({ message: 'File uploaded successfully', path: uploadPath });
-
-
-            //insertion dans la BDD
-            const objectId = new ObjectId(id);
-            const db = getDB();
-            const result = db.collection('Chasses').updateOne(
-                { _id: objectId },
-                { $set: { mapFile: insertFileName } }
-            );
-
-
-
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: 'error',
+            message: error.message,
         });
-    });
-
+    }
 }
-
 exports.getChasseMapImg = async (req,res)=>{
     console.log("chasse map img")
     const idChasse = req.params.id;
