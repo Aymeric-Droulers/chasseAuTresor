@@ -114,9 +114,10 @@ exports.addChasse = async (req, res) => {
             "playingTeams":[]
         }
         const db = getDB();
-        await db.collection('Chasses').insertOne(insertData);
+        const response = await db.collection('Chasses').insertOne(insertData);
+
         console.log("chasse added");
-        res.status(201).json({status:true, message: "Chasse créée" });
+        res.status(201).json({status:true, message: "Chasse créée",id:response.insertedId });
 
 
     }catch(err) {

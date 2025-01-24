@@ -31,7 +31,7 @@ if (!huntId) {
     window.location.href = "gestionEtape.html?hunt_id=678f6541897e114b88f2e497";
 }
 
-const url = "http://localhost:3000/api/chasses/";
+var url = "http://localhost:3000/api/chasses/";
 
 fetch(url, {
     method: 'GET',

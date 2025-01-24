@@ -1,7 +1,3 @@
-const { getAllTeams } = require('../controllers/chasseControllers');
-const { joinTeamByCode } = require('../controllers/chasseControllers');
-
-
 // src/routes/userRoutes.js
 const express = require('express');
 const router = express.Router();
@@ -11,7 +7,8 @@ const { getAllUsers,getUserById,addAccount, getUserByMail, getUserChassesPartici
 } = require('../controllers/userControllers');
 
 const {getAllChasses, getChasseById, addChasse,getChasseSteps,getChasseStep, addStep, getChasseTeams, getChasseTeam,
-    editChasse, getPlayerList, getPlayerInPlayerList, addPlayer, addTeam, getTeamProgress
+    editChasse, getPlayerList, getPlayerInPlayerList, addPlayer, addTeam, getTeamProgress, validateStepInProgress,
+    addMapImg, getChasseMapImg
 }=require('../controllers/chasseControllers');
 
 const {login, logout, getSession} = require("../controllers/authControllers");
