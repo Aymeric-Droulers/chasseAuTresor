@@ -107,7 +107,7 @@ exports.getChasseTeam = async (req, res) => {
 * */
 exports.addChasse = async (req, res) => {
     try{
-        const {accessCode,name,nbTeams,peopleByTeam,startDate,duration,themes,place,randomDeparture,randomSteps}= req.body;
+        const {accessCode,name,nbTeams,peopleByTeam,startDate,duration,themes,place,randomDeparture,randomSteps,owner}= req.body;
         const validation = validateChasseData(req.body);
 
         if(validation.status === false){
@@ -115,7 +115,7 @@ exports.addChasse = async (req, res) => {
         }
 
         const insertData = {
-            "owner":new ObjectId("678e4ea36f8476e700635d7d"),
+            "owner":new ObjectId(owner),
             "name": name,
             "nbTeams":nbTeams,
             "peopleByTeam":peopleByTeam,

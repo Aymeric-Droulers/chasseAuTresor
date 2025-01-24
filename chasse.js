@@ -1,13 +1,15 @@
 // chasse.js
 
-let chaseName   = null;   
+let chasseName   = null;
 let startTime   = null;   
 let endTime     = null;   
 let checkingInt = null;   
 let isFinished  = false;  
+let chasseId    = null;  // ID de la chasse récupéré depuis l'URL
 
+// Initialisation des données de la chasse
 function initChasseData(data) {
-  chaseName = data.name || "Chasse sans nom";
+  chasseName = data.name || "Chasse sans nom";
 
   // Convert startDate
   startTime = new Date(data.startDate);
@@ -17,13 +19,14 @@ function initChasseData(data) {
   endTime = new Date(startTime.getTime() + durationMs);
 
   // Met à jour le titre
-  document.getElementById('chasseName').textContent = "Chasse : " + chaseName;
+  document.getElementById('chasseName').textContent = "Chasse : " + chasseName;
 
   // Lance la boucle
   checkingInt = setInterval(updateDisplay, 1000);
   updateDisplay();
 }
 
+// Fonction de mise à jour de l'affichage
 function updateDisplay() {
   if (isFinished) return;
 
@@ -42,6 +45,9 @@ function updateDisplay() {
     mainTimerEl.textContent    = '00:00';
     messageEl.textContent      = 'La chasse est terminée !';
     startDateInfo.textContent  = '';
+
+    // Redirection vers la page de fin de chasse
+    redirectToEndPage();
     return;
   }
 
@@ -90,6 +96,16 @@ function updateDisplay() {
   }
 }
 
+// Redirection vers la page de fin de chasse
+function redirectToEndPage() {
+  if (chasseId) {
+    window.location.href = `finDechasse.html?id=${chasseId}`;
+  } else {
+    alert("Impossible de rediriger : identifiant de la chasse introuvable.");
+  }
+}
+
+// Formatage du temps en HH:MM:SS
 function formatHMS(totalSec) {
   let hrs  = Math.floor(totalSec / 3600);
   let rem  = totalSec % 3600;
@@ -102,3 +118,30 @@ function formatHMS(totalSec) {
 
   return `${hrs}:${mins}:${secs}`;
 }
+
+// Fonction pour récupérer les données de la chasse
+async function fetchChasseData() {
+  const urlParams = new URLSearchParams(window.location.search);
+  chasseId = urlParams.get("id"); // Récupère l'identifiant de la chasse depuis l'URL
+
+  if (!chasseId) {
+    document.getElementById("message").textContent = "Chasse non trouvée.";
+    return;
+  }
+
+  try {
+    const response = await fetch(`http://localhost:3000/api/chasses/${chasseId}`);
+    if (!response.ok) {
+      throw new Error(`Erreur serveur : ${response.status}`);
+    }
+
+    const chasseData = await response.json();
+    initChasseData(chasseData);
+  } catch (error) {
+    console.error("Erreur lors de la récupération des données de la chasse :", error);
+    document.getElementById("message").textContent = "Erreur lors de la récupération des données.";
+  }
+}
+
+// Initialisation au chargement de la page
+document.addEventListener("DOMContentLoaded", fetchChasseData);

@@ -7,6 +7,6 @@ exports.getAccountByMail = async(mail)=> {
         const account = await DB.collection('Accounts').findOne({mail: mail});
         return account;
     } catch (err) {
-        return "Une erreur s'est produite";
+        return null;
     }
 }

@@ -10,10 +10,12 @@
 
 <body>
     <header class="header">
-        <div class="logo-title">
-            <img src="images/logo.png" alt="Logo Lockéo" class="logo">
-            <h1 class="header-title">LOCKÉO</h1>
-        </div>
+        <a href="accueil.html" style="text-decoration: none;">
+            <div class="logo-title">
+                <img src="images/logo.png" alt="Logo Lockéo" class="logo">
+                <h1 class="header-title">LOCKÉO</h1>
+            </div>
+        </a>
         <nav class="nav-links">
             <a href="accueil.html" class="nav-link">Accueil</a>
             <a href="formulaire.html" class="nav-link">Créer sa chasse</a>
@@ -21,26 +23,7 @@
             <a href="historique.html" class="nav-link">Historique</a>
            
 
-            <button id="logoutBtn">Se déconnecter</button>
-            <script>
-              document.getElementById('logoutBtn').addEventListener('click', async () => {
-                fetch('http://localhost:3000/api/logout', {
-                  method: 'POST',
-                  credentials: 'include'  // IMPORTANT : envoie le cookie
-                })
-                .then(response => {
-                  if (response.ok) return response.json();
-                  throw new Error('Erreur lors de la déconnexion');
-                })
-                .then(data => {
-                  alert(data.message); // ex: “Déconnecté !”
-                  window.location.href = 'login.html';
-                })
-                .catch(err => {
-                  alert(err.message);
-                });
-              });
-            </script>
+            
 
         </nav>
         <img src="images/connexion.png" alt="Connexion" class="login-logo" id="Connexion">
@@ -68,7 +51,7 @@
                 captivante,
                 Lockéo transforme chaque lieu en terrain d’aventure.
                 <div class="event-button-container">
-                    <a href="evenements-alentours.html" class="event-button">Voir les chasses aux alentours</a>
+                    <a href="listing.html" class="event-button">Voir les chasses aux alentours</a>
                 </div>
             </div>
         </div>
@@ -91,7 +74,26 @@
         <div class="footer-bottom">
             &copy; 2025 Lockéo | Tous droits réservés
         </div>
-    </footer>    
+    </footer>
+<script>
+    url="http://localhost:3000/api/session"
+    fetch(url, {
+        method: 'GET',
+        credentials:'include',
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log(data);
+        }).catch(error => {
+        console.error('Erreur lors de la requête:', error);
+        // window.location.assign("accueil.html");
+    });
+</script>
 </body>
 
 </html>
