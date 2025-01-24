@@ -1,27 +1,148 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+15&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
-    margin: 20px;
-  }
-  
-  .container {
-    max-width: 800px;
-    margin: 0 auto;
-  }
-  
-  .section {
-    margin-bottom: 30px;
-  }
-  
-  .button {
-    padding: 10px 20px;
-    background-color: #007BFF;
-    color: white;
-    border: none;
-    cursor: pointer;
-    text-decoration: none;
-  }
-  
-  .button:hover {
-    background-color: #0056b3;
-  }
-  
+  font-family: Arial, sans-serif;
+  background: #f9f9f9;
+  margin: 0;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background-color: #bf8040;
+}
+
+.logo-title {
+  display: flex;
+  align-items: center;
+}
+
+.logo {
+  height: 50px;
+  margin-right: 10px;
+}
+
+.header-title {
+  font-size: 30px;
+  font-weight: bold;
+  color: #8b5e34;
+  font-family: 'Jersey 15', serif;
+  margin: 0;
+}
+
+.nav-links {
+  display: flex;
+  gap: 40px;
+}
+
+.nav-link {
+  color: #fff;
+  text-decoration: none;
+  font-size: 16px;
+  font-weight: bold;
+  position: relative;
+  transition: color 0.3s;
+}
+
+.nav-link::after {
+  content: '';
+  position: absolute;
+  bottom: -5px;
+  /* Distance entre le lien et la barre */
+  left: 0;
+  width: 0;
+  height: 3px;
+  /* Épaisseur de la barre */
+  background-color: #fff;
+  transition: width 0.3s ease-in-out;
+}
+
+.nav-link:hover::after {
+  width: 100%;
+  /* La barre s'étend sur toute la largeur */
+}
+
+
+.login-logo {
+  height: 40px;
+  cursor: pointer;
+}
+
+.title {
+  font-size: 30px;
+  font-weight: bold;
+  color: #d4a377;
+  font-family: 'Jersey 15', serif;
+}
+
+.container {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 20px 40px;
+  background: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  font-family: 'Kanit', sans-serif;
+}
+
+h1 {
+  font-size: 36px;
+  font-weight: bold;
+  color: #8b5e34;
+  font-family: 'Jersey 15', serif;
+  text-align: center;
+  margin-bottom: 20px;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: #c68c53;
+  margin-bottom: 10px;
+}
+
+p,
+ul {
+  font-size: 16px;
+  color: #555;
+  margin-bottom: 15px;
+  text-decoration: none;
+}
+
+ul {
+  list-style: none;
+  padding: 0;
+  text-decoration: none;
+}
+
+ul li {
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  background-color: #f7f7f7;
+  margin-bottom: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+}
+
+.chasses-container {
+  display: flex;
+  justify-content: space-between;
+  gap: 20px;
+  margin-top: 20px;
+  text-decoration: none;
+}
+
+#created-hunts,
+#joined-hunts {
+  flex: 1;
+  padding: 20px;
+  background: #f7f7f7;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  text-decoration: none;
+}
