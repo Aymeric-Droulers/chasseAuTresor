@@ -58,7 +58,7 @@ fetch(url, {
             inputStepName.value = "";
             inputStepHint.value = "";
 
-            url = "http://localhost:3000/api/chasses/"+huntId+"/getMapImg";
+            /*url = "http://localhost:3000/api/chasses/"+huntId+"/getMapImg";
 
             fetch(url, {
                 method: 'GET',
@@ -77,7 +77,7 @@ fetch(url, {
             })
             .catch(error => {
                 console.error('Erreur lors de la requête :', error);
-            });
+            });*/
         }
     })
 })
@@ -265,7 +265,7 @@ function validateMap() {
 
 function placePoints(e) {
     if (placingPoints && listPointsMap.length < listSteps.length) {
-        listPointsMap.push([e.clientX-5-mapOutput.offsetLeft,e.clientY-5-mapOutput.offsetTop])
+        listPointsMap.push([e.clientX-5-mapOutput.offsetLeft,e.clientY-5-mapOutput.offsetTop+window.scrollY]);
 
         newPointRow = document.createElement("tr");
         rowNumber = document.createElement("th");
@@ -303,7 +303,6 @@ function showNewPoint() {
     var newPoint = document.createElement("div");
     newPoint.className = "points";
     newPoint.innerText = listPointsMap.length;
-    console.log(listPointsMap[listPointsMap.length-1]);
     newPoint.style.top = (listPointsMap[listPointsMap.length-1][1]) + "px";
     newPoint.style.left = (listPointsMap[listPointsMap.length-1][0]) + "px";
     mapPoints.appendChild(newPoint);
@@ -430,13 +429,12 @@ function sendToDB() {
     if (allValid) {
         url = "http://localhost:3000/api/chasses/" + huntId + "/addStep";
         var data = {};
-        data["steps"] = [];
-        data["steps"].push({});
         for (let i = 0; i < listSteps.length; i++) {
-            data["steps"][0]["stepId"] = i;
-            data["steps"][0]["stepName"] = listSteps[i][0];
-            data["steps"][0]["stepHint"] = listSteps[i][1];
-            data["steps"][0]["points"] = listPointsMap[i];
+            data["stepId"] = i;
+            data["stepName"] = listSteps[i][0];
+            data["stepHint"] = listSteps[i][1];
+            data["stepCode"] = i+1;
+            data["points"] = listPointsMap[i];
             fetch(url, {
                 method: 'POST',
                 headers: {
@@ -457,7 +455,26 @@ function sendToDB() {
                 console.error('Erreur lors de la requête :', error);
             });
         }
-        url = "";
+        /*url = "http://localhost:3000/api/chasses/" + huntId + "/addMap";
+        fetch(url, {
+            method: 'POST',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body: ,
+        })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            console.log('Réponse du serveur :', data);
+        })
+        .catch(error => {
+            console.error('Erreur lors de la requête :', error);
+        });*/
     }
 }
 
