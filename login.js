@@ -4,6 +4,7 @@ Signup.addEventListener("click",DoSignup);
 Connect.addEventListener("click",DoConnect);
 var Namealert = document.getElementById("Namealert");
 var Mailalert = document.getElementById("Mailalert");
+var Connectalert=document.getElementById("Connectalert")
 var total;
 
 function DoSignup(){

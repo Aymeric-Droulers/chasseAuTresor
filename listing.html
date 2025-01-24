@@ -2,80 +2,49 @@
 <html lang="fr">
 <head>
   <meta charset="UTF-8">
-  <title>Liste des Chasses (Auto-refresh)</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Liste des Chasses</title>
+  <link rel="stylesheet" href="listing.css">
 </head>
 <body>
+  <header class="header">
+    <div class="logo-title">
+        <img src="images/logo.png" alt="Logo Lockéo" class="logo">
+        <h1 class="header-title">LOCKÉO</h1>
+    </div>
+    <nav class="nav-links">
+      <a href="accueil.html" class="nav-link">Accueil</a>
+      <a href="formulaire.html" class="nav-link">Créer sa chasse</a>
+      <a href="listing.html" class="nav-link">Chasses aux alentours</a>
+      <a href="historique.html" class="nav-link">Historique</a>
+    </nav>
+    <img src="images/connexion.png" alt="Connexion" class="login-logo">
+</header>
   <h1>Liste des Chasses</h1>
   <div id="chassesContainer">Chargement en cours...</div>
 
-  <script>
-    // 1. Fonction pour récupérer la liste et mettre à jour l'affichage
-    async function fetchChasses() {
-      try {
-        const response = await fetch('http://localhost:3000/api/chasses');
-        if (!response.ok) {
-          throw new Error(`Erreur serveur : ${response.status}`);
-        }
-        const chasses = await response.json();
-
-        const container = document.getElementById('chassesContainer');
-        container.innerHTML = ''; 
-
-        chasses.forEach(chasse => {
-
-          const titre = document.createElement('h2');
-          titre.textContent = chasse.name || "Chasse sans nom";
-
-      
-          const dateDebut = new Date(chasse.startDate);
-          // Conversion en chaîne lisible
-          const dateDebutTxt = dateDebut.toLocaleString('fr-FR', {
-            weekday: 'long',  
-            year: 'numeric',
-            month: 'long',     
-            day: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit',
-            
-          });
-
-          const dateEl = document.createElement('p');
-          dateEl.textContent = `Début : ${dateDebutTxt}`;
-
-          // Bouton "Rejoindre"
-          const btn = document.createElement('button');
-          btn.textContent = "Rejoindre";
-          btn.addEventListener('click', () => {
-            // Redirige vers la page chasse.html?id=CHASSE_ID
-            window.location.href = `chasse.html?id=${chasse._id}`;
-          });
-
-       
-          const bloc = document.createElement('div');
-          bloc.appendChild(titre);
-          bloc.appendChild(dateEl);
-          bloc.appendChild(btn);
-
-        
-          container.appendChild(bloc);
-        });
-
-      } catch (err) {
-        console.error(err);
-        const container = document.getElementById('chassesContainer');
-        container.textContent = "Erreur lors de la récupération des chasses.";
-      }
-    }
-
-    // 2. Au chargement, on appelle fetchChasses()
-    document.addEventListener('DOMContentLoaded', () => {
-      fetchChasses();
-
-      // 3. Mise à jour automatique toutes les 10s (grosso modo mais en sah plus rapide)
-      setInterval(() => {
-        fetchChasses();
-      }, 10000);
-    });
-  </script>
+  
+  
+  <footer class="footer">
+    <div class="footer-content">
+        <div class="footer-section about">
+            <h2>Lockéo</h2>
+            <p>Votre plateforme dédiée à l'organisation de chasses aux trésors immersives et éducatives.</p>
+        </div>
+        <div class="footer-section links">
+            <img src="images/logo.png" alt="Logo Lockéo" class="logofooter">
+        </div>
+        <div class="footer-section contact">
+            <h3>Contactez-nous</h3>
+            <p>Email : contact@lockeo.com</p>
+            <p>Téléphone : +33 3 33 33 33 33</p>
+        </div>
+    </div>
+    <div class="footer-bottom">
+        &copy; 2025 Lockéo | Tous droits réservés
+    </div>
+  </footer>
+  <!-- Inclusion du fichier JavaScript -->
+  <script src="listing.js"></script>
 </body>
 </html>

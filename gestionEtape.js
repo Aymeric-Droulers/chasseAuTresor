@@ -12,6 +12,7 @@ var buttonPointsChangeOrder = document.getElementById("changePointsOrder");
 var arnaque = document.getElementById("potionD'Invisibilite");
 var validationAll = document.getElementById("validateAll");
 var validationError = document.getElementById("errorBox");
+var mapPoints = document.getElementById("mapPoints");
 var listSteps = [];
 var listPointsMap = [];
 var listDeletes = [];
@@ -21,7 +22,75 @@ var listUpArrowsPoints = [];
 var listDownArrows = [];
 var listDownArrowsPoints = [];
 var placingPoints = false;
+var mapToPutInDB = false;
 
+const urlParams = new URLSearchParams(window.location.search);
+var huntId = urlParams.get('hunt_id');
+if (!huntId) {
+    //window.location.href = "accueil.html";
+    window.location.href = "gestionEtape.html?hunt_id=678f6541897e114b88f2e497";
+}
+
+const url = "http://localhost:3000/api/chasses/";
+
+fetch(url, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`);
+    }
+    return response.json();
+})
+.then(hunts => {
+    hunts.forEach(hunt => {
+        if (hunt._id == huntId) {
+            console.log(hunt);
+            for (let i = 0; i < hunt.steps.length; i++) {
+                inputStepName.value = hunt.steps[i].stepName;
+                inputStepHint.value = hunt.steps[i].stepHint;
+                createStep();
+                placePointsAuto(hunt.steps[i].points[0],hunt.steps[i].points[1]);
+            }
+            inputStepName.value = "";
+            inputStepHint.value = "";
+        }
+    })
+})
+.catch(error => {
+    console.error('Erreur lors de la requête :', error);
+});
+
+url = "http://localhost:3000/api/chasses/" + hunt._id + "/getMapImg";
+
+fetch(url, {
+    method: 'GET',
+    headers: {
+        'Content-Type': 'application/json'
+    },
+})
+.then(response => {
+    if (!response.ok) {
+        throw new Error(`Erreur HTTP : ${response.status}`);
+    }
+    return response.json();
+})
+.then(map => {
+    mapOutput.src = map;
+})
+.catch(error => {
+    console.error('Erreur lors de la requête :', error);
+});
+
+if (hunt.steps.length != 0) {
+    mapToPutInDB = true;
+}
+else {
+    mapOutput.src = hunt.mapFile;
+}
 
 buttonStepValidation.addEventListener("click",createStep);
 buttonStepsChangeOrder.addEventListener("click",changeOrder);
@@ -42,6 +111,10 @@ mapInput.onchange = function(event) {
 
     reader.readAsDataURL(file);
 };
+
+window.onresize = function() {
+    mapPoints.style.left = mapOutput.offsetLeft + "px";
+}
 
 function createStep() {
     let changeBack = false;
@@ -189,12 +262,33 @@ function validateMap() {
         mapForm.appendChild(tablePoints);
         placingPoints = true;
         arnaque.style = "";
+        mapPoints.style.position = "absolute";
+        mapPoints.style.left = mapOutput.offsetLeft + "px";
+        mapPoints.style.top = (mapOutput.offsetTop) + "px";
     }
 }
 
 function placePoints(e) {
     if (placingPoints && listPointsMap.length < listSteps.length) {
-        listPointsMap.push([e.clientX-320,e.clientY-100])
+        listPointsMap.push([e.clientX-5-mapOutput.offsetLeft,e.clientY-5-mapOutput.offsetTop+57.5])
+
+        newPointRow = document.createElement("tr");
+        rowNumber = document.createElement("th");
+        rowNumber.innerText = tablePoints.children.length+1;
+        pointNumber = document.createElement("th");
+        pointNumber.innerText = tablePoints.children.length+1;
+
+        newPointRow.appendChild(rowNumber);
+        newPointRow.appendChild(pointNumber);
+        tablePoints.appendChild(newPointRow);
+
+        showNewPoint();
+    }
+}
+
+function placePointsAuto(pointX,pointY) {
+    if (placingPoints && listPointsMap.length < listSteps.length) {
+        listPointsMap.push([pointX-5,pointY-5]);
 
         newPointRow = document.createElement("tr");
         rowNumber = document.createElement("th");
@@ -214,8 +308,10 @@ function showNewPoint() {
     var newPoint = document.createElement("div");
     newPoint.className = "points";
     newPoint.innerText = listPointsMap.length;
-    newPoint.style = "left:" + (listPointsMap[listPointsMap.length-1][0]-5) + "px; top:" + (70+listPointsMap[listPointsMap.length-1][1]) + "px;"
-    mapForm.appendChild(newPoint);
+    console.log(listPointsMap[listPointsMap.length-1]);
+    newPoint.style.top = (listPointsMap[listPointsMap.length-1][1]) + "px";
+    newPoint.style.left = (listPointsMap[listPointsMap.length-1][0]) + "px";
+    mapPoints.appendChild(newPoint);
 }
 
 function changeOrderPoints() {
@@ -227,7 +323,7 @@ function changeOrderPoints() {
             deleteButton.id = "delete" + i;
             tablePoints.children[i].appendChild(deleteButton);
             listDeletesPoints.push(deleteButton);
-            deleteButton.addEventListener("mousedown",deleteStep.bind(deleteButton));
+            deleteButton.addEventListener("mousedown",deletePoint.bind(deleteButton));
 
             if (i != 0) {
                 var upButton = document.createElement("button");
@@ -312,7 +408,7 @@ function pointGoDown() {
     changeOrderPoints();
 }
 
-function deleteStep() {
+function deletePoint() {
     changeOrderPoints();
     let char = this.id;
     let toDelete = "";
@@ -337,8 +433,6 @@ function sendToDB() {
     }
 
     if (allValid) {
-        var id = 0;
-        const url = "http://localhost:3000/api/chasses/"+id+"/addStep";
         var data = {};
         data["steps"] = [];
         data["steps"].push({});
@@ -370,3 +464,60 @@ function sendToDB() {
         }
     }
 }
+
+const downloadPdfButton = document.getElementById('downloadPdf');
+const steps = []; // Assurez-vous que cette liste contient vos étapes
+
+// Ajouter une étape
+document.getElementById('validateStep').addEventListener('click', () => {
+  const stepName = document.getElementById('stepName').value.trim();
+  const stepHint = document.getElementById('stepHint').value.trim();
+
+  if (stepName && stepHint) {
+    steps.push({ name: stepName, hint: stepHint });
+    updateStepTable();
+    document.getElementById('stepName').value = '';
+    document.getElementById('stepHint').value = '';
+  } else {
+    alert('Veuillez remplir les deux champs.');
+  }
+});
+
+// Mise à jour de la table des étapes
+function updateStepTable() {
+  const tableSteps = document.getElementById('tableSteps');
+  tableSteps.innerHTML = '';
+  steps.forEach((step, index) => {
+    const row = document.createElement('tr');
+    row.innerHTML = `<td>${index + 1}</td><td>${step.name}</td><td>${step.hint}</td>`;
+    tableSteps.appendChild(row);
+  });
+}
+
+// Fonction pour générer et télécharger le PDF
+downloadPdfButton.addEventListener('click', async () => {
+  if (steps.length === 0) {
+    alert('Veuillez ajouter des étapes avant de télécharger.');
+    return;
+  }
+
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF();
+
+  for (let i = 0; i < steps.length; i++) {
+    const step = steps[i];
+
+    // Générer une URL dynamique pour l'indice
+    const pageURL = `https://mon-site.com/indice.html?step=${encodeURIComponent(step.hint)}`;
+    const qrCodeData = await QRCode.toDataURL(pageURL);
+
+    // Ajouter QR code et texte dans le PDF
+    doc.text(`Étape ${i + 1}: ${step.name}`, 10, 10 + i * 30);
+    doc.addImage(qrCodeData, 'PNG', 10, 20 + i * 30, 50, 50);
+
+    if (i < steps.length - 1) doc.addPage(); // Ajouter une page pour chaque étape sauf la dernière
+  }
+
+  doc.save('chasse_au_tresor.pdf');
+});
+

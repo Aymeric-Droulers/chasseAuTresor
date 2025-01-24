@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <title>Mon Compte</title>
+  <link rel="stylesheet" href="mon_compte.css">
+</head>
+<body>
+  <div class="container">
+    <h1>Mon Compte</h1>
+
+    <!-- Informations utilisateur -->
+    <div class="section">
+      <h2>Informations utilisateur</h2>
+      <p><strong>Nom : </strong><span id="userName">Chargement...</span></p>
+      <p><strong>Email : </strong><span id="userEmail">Chargement...</span></p>
+      <p>
+        <strong>Mot de passe : </strong>
+        <input type="password" id="userPassword" readonly value="********">
+        <button onclick="togglePassword()">Afficher</button>
+      </p>
+    </div>
+
+    <!-- Chasses créées -->
+    <div class="section">
+      <h2>Chasses créées</h2>
+      <ul id="createdHunts">Chargement...</ul>
+    </div>
+
+    <!-- Chasses rejointes -->
+    <div class="section">
+      <h2>Chasses rejointes</h2>
+      <ul id="joinedHunts">Chargement...</ul>
+    </div>
+  </div>
+
+  <script src="mon_compte.js"></script>
+</body>
+</html>

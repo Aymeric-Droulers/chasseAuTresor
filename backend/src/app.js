@@ -17,20 +17,17 @@ app.use(express.json());
 
 // 3. Configuration CORS
 app.use(cors({
-  origin: '*',
+  origin: 'http://localhost:5500',
   methods: ['GET', 'POST', 'PUT', 'DELETE'],
   credentials: true
 }));
 
 // 4. Configuration de session
 app.use(session({
-  secret: 'votreSecret',
+  secret: 'your_secret_key',
   resave: false,
-  saveUninitialized: false,
-  cookie: {
-    sameSite: 'none',
-    secure: false
-  }
+  saveUninitialized: true,
+  cookie: { secure: false }
 }));
 
 // 5. Brancher les routes API

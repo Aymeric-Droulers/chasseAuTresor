@@ -1,12 +1,12 @@
 @import url('https://fonts.googleapis.com/css2?family=Jersey+15&display=swap');
-@import url('https://fonts.googleapis.com/css2?family=Kanit:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
-body {
-    margin: 0;
-    font-family: Arial, sans-serif;
-    background-color: #fff;
-    text-align: center;
-}
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
 
+body {
+    font-family: 'Kanit', sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 0;
+}
 .header {
     display: flex;
     justify-content: space-between;
@@ -45,6 +45,7 @@ body {
     font-weight: bold;
     position: relative;
     transition: color 0.3s;
+    font-family: Arial, sans-serif;
 }
 
 .nav-link::after {
@@ -76,74 +77,63 @@ body {
     font-family: 'Jersey 15', serif;
 }
 
-.tagline {
-    font-size: 70px;
+h1 {
+    font-size: 36px;
     font-weight: bold;
-    margin: 0; /* Supprime toute marge externe */
+    color: #8b5e34;
     font-family: 'Jersey 15', serif;
-    text-align: left; /* Aligne le texte à gauche */
-    line-height: 2.2; /* Réduit l'espacement vertical entre les lignes */
-    padding-left: 40px; /* Ajoute un léger décalage à gauche si nécessaire */
-    display: flex;
-    flex-direction: column; /* Force les mots à être sur des lignes séparées */
-    gap: 0; /* Supprime tout espace entre les lignes dans flexbox */
-    color: #fff;
+    text-align: center;
+    margin: 30px 0;
 }
 
-
-.resolve {
-    padding-left: 100px;
-}
-
-.triomphe {
-    padding-left: 200px;
-}
-
-.desc {
-    height: 500px;
-    background: linear-gradient(rgba(191, 128, 64, 0.6), rgba(191, 128, 64, 0.6)), 
-                url('images/fond.jpg') no-repeat center center/cover;
-}
-
-.description {
-    font-size: 18px;
-    margin-top: 10px;
-    line-height: 1.6;
+#chassesContainer {
+    max-width: 900px;
+    margin: 0 auto;
     padding: 20px;
-    font-family: 'Kanit', sans-serif;
-    font-weight: 600; /* Choix du poids de la police */
+    background: #fff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
 }
 
-.highlighted {
-    font-size: 32px;
+#chassesContainer div {
+    padding: 20px;
+    background: #f7f7f7;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    font-size: 24px;
     font-weight: bold;
-    color: #bf8040;
-    background-color: rgba(255, 255, 255, 0.8);
-    padding: 10px;
-    border-radius: 5px;
-    display: inline-block;
+    color: #c68c53;
     margin-bottom: 10px;
 }
 
-.event-button-container {
-    text-align: center;
-    margin-top: 20px;
-}
-
-.event-button {
-    display: inline-block;
-    background-color: #bf8040;
-    color: #fff;
-    text-decoration: none;
-    padding: 10px 20px;
+p {
     font-size: 16px;
-    font-weight: bold;
-    border-radius: 5px;
-    transition: background-color 0.3s;
+    color: #555;
+    margin-bottom: 10px;
 }
 
-.event-button:hover {
-    background-color: #8b5e34;
+button {
+    display: inline-block;
+    padding: 10px 20px;
+    background-color: #c68c53;
+    color: #fff;
+    font-size: 14px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #d9b38c;
 }
 
 .footer {

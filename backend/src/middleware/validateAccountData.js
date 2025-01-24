@@ -7,11 +7,11 @@ exports.validateAccountData =async (data) => {
     }
 
     if(name.length > 64) {
-        return ({status:false,message:"Le nom peut faire maxiumum 64 caractères"});
+        return ({status:false,message:"Le nom peut faire maximum 64 caractères"});
     }
 
     if(mail.length > 128) {
-        return ({status:false,message:"Le mail peut faire maxiumum 128 caractères"});
+        return ({status:false,message:"Le mail peut faire maximum 128 caractères"});
     }
 
 

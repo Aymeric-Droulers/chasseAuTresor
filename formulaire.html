@@ -11,15 +11,21 @@
 <body>
     <header class="header">
         <div class="logo-title">
-            <img src="../images/logo.png" alt="Logo Lockéo" class="logo">
+            <img src="images/logo.png" alt="Logo Lockéo" class="logo">
             <h1 class="header-title">LOCKÉO</h1>
         </div>
         <nav class="nav-links">
-            <a href="creer-evenement.html" class="nav-link">Créer son événement</a>
-            <a href="evenements-alentours.html" class="nav-link">Événements aux alentours</a>
+            <a href="accueil.html" class="nav-link">Accueil</a>
+            <a href="formulaire.html" class="nav-link">Créer son événement</a>
+            <a href="listing.html" class="nav-link">Événements aux alentours</a>
             <a href="historique.html" class="nav-link">Historique</a>
         </nav>
-        <img src="../images/connexion.png" alt="Connexion" class="login-logo">
+        <img src="images/connexion.png" alt="Connexion" class="login-logo" id="Connexion">
+        <script>
+            Connexion = document.getElementById("Connexion");
+            function connect(){window.location.assign('login.html');}
+            Connexion.addEventListener("click", connect);
+        </script>
     </header>
     <div class="form1">
         <form class="form1" action="/submit" method="post">
@@ -71,7 +77,7 @@
                 <p>Votre plateforme dédiée à l'organisation de chasses aux trésors immersives et éducatives.</p>
             </div>
             <div class="footer-section links">
-                <img src="../images/logo.png" alt="Logo Lockéo" class="logofooter">
+                <img src="images/logo.png" alt="Logo Lockéo" class="logofooter">
             </div>
             <div class="footer-section contact">
                 <h3>Contactez-nous</h3>
