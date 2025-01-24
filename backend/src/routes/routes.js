@@ -8,7 +8,7 @@ const { getAllUsers,getUserById,addAccount, getUserByMail, getUserChassesPartici
 
 const {getAllChasses, getChasseById, addChasse,getChasseSteps,getChasseStep, addStep, getChasseTeams, getChasseTeam,
     editChasse, getPlayerList, getPlayerInPlayerList, addPlayer, addTeam, getTeamProgress, validateStepInProgress,
-    addMapImg, getChasseMapImg
+    addMapImg, getChasseMapImg ,joinTeamByCode 
 }=require('../controllers/chasseControllers');
 
 const {login, logout, getSession} = require("../controllers/authControllers");
