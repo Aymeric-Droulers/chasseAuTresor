@@ -424,64 +424,42 @@ exports.validateStepInProgress =async (req, res) => {
 
 exports.addMapImg = async (req, res) => {
     const id= req.params.id;
-    const buffers = [];
 
-    req.on('data', (chunk) => {
-        buffers.push(chunk); // Récupère les morceaux de données envoyées
-    });
-
-    req.on('end', () => {
-        const fullBuffer = Buffer.concat(buffers);
-
-        // Exemple pour extraire des métadonnées du fichier (par défaut ici)
-        const boundary = req.headers['content-type'].split('; ')[1].split('=')[1];
-        const parts = fullBuffer.toString().split(`--${boundary}`);
-
-        const filePart = parts.find((part) =>
-            part.includes('Content-Disposition: form-data; name="file"; filename='),
-        );
-
-        if (!filePart) {
-            return res.status(400).json({ message: 'No file uploaded' });
+    try {
+        // Si le fichier est uploadé avec succès
+        if (req.file) {
+            res.status(200).json({
+                status: 'success',
+                message: 'Image uploaded successfully!',
+                file: req.file, // Retourne les informations du fichier
+            });
+        } else {
+            res.status(400).json({
+                status: 'error',
+                message: 'No file uploaded',
+            });
         }
-
-        // Extraire les métadonnées du fichier
-        const filename = filePart
-            .match(/filename="([^"]+)"/)[1]
-            .replace(/[^a-z0-9.\-_]/gi, ''); // Nettoyer le nom du fichier
-
-        // Extraire les données du fichier (après une ligne vide)
-        const fileData = filePart.split('\r\n\r\n')[1].split('\r\n--')[0];
-        const fileBuffer = Buffer.from(fileData, 'binary');
-
-        // Enregistrer le fichier sur le serveur
-        const extension = filename.split('.')[1]
-        const uploadPath = path.join(__dirname, '../../public/maps', (id+"."+extension));
-        const insertFileName = id+"."+extension;
-        console.log(uploadPath);
-
-        fs.writeFile(uploadPath, fileBuffer, (err) => {
-            if (err) {
-                console.error(err);
-                return res.status(500).json({ message: 'File upload failed' });
-            }
-
-            console.log(`File saved at ${uploadPath}`);
-            res.status(200).json({ message: 'File uploaded successfully', path: uploadPath });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({
+            status: 'error',
+            message: error.message,
+        });
+    }
 
 
             //insertion dans la BDD
-            const objectId = new ObjectId(id);
+          /*  const objectId = new ObjectId(id);
             const db = getDB();
             const result = db.collection('Chasses').updateOne(
                 { _id: objectId },
                 { $set: { mapFile: insertFileName } }
             );
+*/
 
 
 
-        });
-    });
+
 
 }
 

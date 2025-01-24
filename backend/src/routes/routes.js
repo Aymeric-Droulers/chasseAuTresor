@@ -12,7 +12,7 @@ const {getAllChasses, getChasseById, addChasse,getChasseSteps,getChasseStep, add
     editChasse, getPlayerList, getPlayerInPlayerList, addPlayer, addTeam, getTeamProgress
 }=require('../controllers/chasseControllers');
 const {login, logout, getSession} = require("../controllers/authControllers");
-
+const upload = require('../config/uploadConfig');
 
 // auth routes
 
@@ -52,7 +52,7 @@ router.post('/chasses/:id/allTeams/:team/addPlayer',addPlayer)
 router.get('/chasses/:id/allTeams/:team/teamProgress',getTeamProgress)
 router.post('/chasses/:id/allTeams/:team/validateStepInProgress',validateStepInProgress)
 router.post('/chasses/addChasse', addChasse);
-router.post('/chasses/:id/addMapImg',addMapImg)
+router.post('/chasses/:id/addMapImg', upload.single('image'),addMapImg)
 router.get('/chasses/:id/getMapImg',getChasseMapImg)
 
 module.exports = router;
