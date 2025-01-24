@@ -1,4 +1,5 @@
 const {getAccountByMail} = require("../utils/getAccountByMail");
+
 exports.logout = (req, res) => {
     req.session.destroy(err => {
         if (err) {
