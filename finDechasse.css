@@ -1,0 +1,103 @@
+@import url('https://fonts.googleapis.com/css2?family=Jersey+15&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Kanit:wght@300;400;500;700&display=swap');
+
+body {
+    font-family: 'Kanit', sans-serif;
+    background: #f9f9f9;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+}
+
+main {
+    width: 90%;
+    max-width: 900px;
+    background: #fff;
+    padding: 20px 40px;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+#titre {
+    font-size: 36px;
+    font-weight: bold;
+    color: #8b5e34;
+    font-family: 'Jersey 15', serif;
+    margin-bottom: 30px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+table th, table td {
+    padding: 15px;
+    text-align: center;
+    border: 1px solid #ddd;
+    font-size: 16px;
+    color: #555;
+}
+
+table th {
+    background-color: #f7f7f7;
+    font-weight: bold;
+    color: #8b5e34;
+}
+
+.greenSquare {
+    background-color: lawngreen;
+    color: #fff;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+.redSquare {
+    background-color: red;
+    color: #fff;
+    font-weight: bold;
+    padding: 5px;
+    border-radius: 5px;
+}
+
+button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    background-color: #c68c53;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+button:hover {
+    background-color: #d9b38c;
+}
+
+.button-back {
+    display: inline-block;
+    margin: 20px auto;
+    padding: 12px 20px;
+    background-color: #c68c53;
+    color: #fff;
+    font-size: 16px;
+    font-weight: bold;
+    text-decoration: none;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+    text-align: center;
+}
+
+.button-back:hover {
+    background-color: #d9b38c;
+}

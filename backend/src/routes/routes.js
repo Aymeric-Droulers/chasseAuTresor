@@ -15,6 +15,20 @@ const {login, logout, getSession} = require("../controllers/authControllers");
 
 const upload = require('../config/uploadConfig');
 
+router.get('/teams/:id', async (req, res) => {
+    try {
+        const { id } = req.params;
+        const db = getDB();
+        const team = await db.collection('Teams').findOne({ _id: new ObjectId(id) });
+        if (!team) return res.status(404).json({ error: 'Équipe introuvable.' });
+        res.status(200).json(team);
+    } catch (error) {
+        console.error('Erreur serveur :', error);
+        res.status(500).json({ error: 'Erreur serveur.' });
+    }
+});
+
+
 // auth routes
 router.post('/login', login);
 router.post('/logout', logout);
@@ -37,10 +51,11 @@ router.put('/chasses/:id/edit',editChasse);
 router.get('/chasses/:id/allSteps',getChasseSteps);
 router.get('/chasses/:id/allSteps/:step',getChasseStep);
 router.post('/chasses/:id/addStep',addStep)
-router.post('/chasses/:id/addTeam',addTeam)
+router.post('/chasses/:id/addTeam', addTeam);
 router.get('/chasses/:id/allTeams',getChasseTeams);
 router.get('/chasses/:id/allTeams/:team',getChasseTeam);
 router.get('/chasses/:id/allTeams/:team/playerList',getPlayerList);
+router.post('/chasses/joinTeamByCode', joinTeamByCode);
 router.get('/chasses/:id/allTeams/:team/playerList/:player',getPlayerInPlayerList);
 router.post('/chasses/:id/allTeams/:team/addPlayer',addPlayer)
 router.get('/chasses/:id/allTeams/:team/teamProgress',getTeamProgress)

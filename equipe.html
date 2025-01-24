@@ -20,23 +20,25 @@
         <div id="teamList" class="team-list">
             <!-- Teams will be dynamically rendered here -->
         </div>
-    </div>
+    </div>np
 
     <!-- Floating Button for Creating Team -->
     <button id="floatingCreateButton" class="floating-btn">+</button>
 
     <!-- Create Team Pop-up -->
     <div id="create-popup" class="popup hidden">
-        <h2>Create a Team</h2>
-        <label for="teamName">Team Name:</label>
-        <input id="teamName" type="text" placeholder="Enter team name" autocomplete="off">
-        <label for="accessCode">Access Code (4 digits):</label>
-        <input id="accessCode" type="text" placeholder="Enter access code" autocomplete="off"> 
+        <h2>Créer une équipe</h2>
+        <p id="teamLimits">Nombre d'équipes max : <span id="maxTeams"></span>, Membres par équipe max : <span id="maxPlayers"></span></p>
+        <label for="teamName">Nom de l'équipe :</label>
+        <input id="teamName" type="text" placeholder="Entrez le nom de l'équipe" autocomplete="off">
+        <label for="accessCode">Code d'accès (4 chiffres) :</label>
+        <input id="accessCode" type="text" placeholder="Entrez le code d'accès" autocomplete="off"> 
         <div class="popup-buttons">
-            <button id="createTeamButton" class="btn btn-primary">Create Team</button>
-            <button id="cancelCreateButton" class="btn btn-secondary">Cancel</button>
+            <button id="createTeamButton" class="btn btn-primary">Créer une équipe</button>
+            <button id="cancelCreateButton" class="btn btn-secondary">Annuler</button>
         </div>
     </div>
+    
 
     <!-- Join Team Pop-up -->
     <div id="join-team-popup" class="popup hidden">

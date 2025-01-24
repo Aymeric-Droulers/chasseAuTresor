@@ -256,23 +256,48 @@ exports.getPlayerInPlayerList = async (req, res) => {
 // Ajoute une équipe sans référence à une chasse
 exports.addTeam = async (req, res) => {
     try {
-        const { teamName } = req.body;
+        const { teamName, accessCode } = req.body;
+        const { id } = req.params; // ID de la chasse
 
         if (!teamName || teamName.length < 3) {
-            return res.status(400).json({ error: 'Le nom de l\'équipe est invalide.' });
+            return res.status(400).json({ error: "Le nom de l'équipe est invalide." });
         }
 
         const db = getDB();
+
+        // Récupérer la chasse
+        const chasse = await db.collection('Chasses').findOne({ _id: new ObjectId(id) });
+        if (!chasse) {
+            return res.status(404).json({ error: "Chasse introuvable." });
+        }
+
+        // Vérifier si le nombre maximum d'équipes est atteint
+        if (chasse.playingTeams.length >= chasse.nbTeams) {
+            return res.status(400).json({ error: "Nombre maximum d'équipes atteint." });
+        }
+
+        // Ajouter l'équipe dans la collection Teams
         const result = await db.collection('Teams').insertOne({
             teamName,
             teamPlayersIds: [],
+            accessCode, // Code d'accès
         });
 
-        res.status(201).json({ message: 'Équipe ajoutée avec succès', teamId: result.insertedId });
+        // Ajouter cette équipe à playingTeams dans la chasse
+        await db.collection('Chasses').updateOne(
+            { _id: new ObjectId(id) },
+            { $push: { playingTeams: { teamId: result.insertedId, teamName, teamPlayersIds: [], accessCode } } }
+        );
+
+        res.status(201).json({ message: "Équipe ajoutée avec succès", teamId: result.insertedId });
     } catch (err) {
-        res.status(500).json({ error: 'Erreur lors de l\'ajout de l\'équipe.' });
+        console.error(err);
+        res.status(500).json({ error: "Erreur lors de l'ajout de l'équipe." });
     }
 };
+
+
+
 exports.getAllTeams = async (req, res) => {
     try {
         const db = getDB();
@@ -338,26 +363,32 @@ exports.getTeamProgress = async (req, res) => {
     return res.status(200).json({status:true, completedSteps:completedSteps});
 }
 exports.joinTeamByCode = async (req, res) => {
+    console.log('Requête reçue pour rejoindre une équipe :', req.body);
     const { teamId, accessCode } = req.body;
 
     try {
         const db = getDB();
         const team = await db.collection('Teams').findOne({ _id: new ObjectId(teamId) });
-
         if (!team) {
-            return res.status(404).json({ message: 'Team not found' });
+            console.log('Équipe introuvable');
+            return res.status(404).json({ message: "Équipe introuvable." });
         }
 
-        if (team.accessCode === accessCode) {
-            return res.status(200).json({ message: 'Successfully joined the team!', teamName: team.teamName });
-        } else {
-            return res.status(400).json({ message: 'Incorrect access code. Please try again.' });
+        if (team.accessCode !== accessCode) {
+            console.log('Code d\'accès incorrect');
+            return res.status(400).json({ message: "Code d'accès incorrect." });
         }
+
+        console.log('Rejoint avec succès');
+        res.status(200).json({ message: "Rejoint avec succès !", teamName: team.teamName });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ message: 'Server error. Please try again later.' });
+        console.error('Erreur serveur :', error);
+        res.status(500).json({ message: "Erreur serveur. Veuillez réessayer plus tard." });
     }
 };
+
+
+
 exports.validateStepInProgress =async (req, res) => {
     try {
         const {id, team} = req.params;

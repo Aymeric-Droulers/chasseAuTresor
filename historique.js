@@ -3,24 +3,18 @@ let baseTemporaire = [
 
 let url;
 
-const urlParams = new URLSearchParams(window.location.search);
-const userId = urlParams.get('userId');
-if(!userId){
-    //window.location.href = `login.html`;
-}
-
 let listeChasses = {
     joués : [],
     crées : [],
 };
 
 //Recuperation des chasses joués par l'utilisateur.
-url=`http://localhost:3000/api/accounts/${userId}`;
-fetch(url, {
+fetch('http://localhost:3000/api/session', {
     method: 'GET',
+    credentials: 'include',
     headers: {
         'Content-Type': 'application/json'
-    },
+    }
 })
 .then(response => {
     if (!response.ok) {
@@ -28,62 +22,81 @@ fetch(url, {
     }
     return response.json();
 })
-.then(user => {
-    listeChasses.joués = user.chassesParticipated;
-    listeChasses.crées = user.chassesCreated;
-})
-.catch(error => {
-    console.error('Erreur lors de la requête :', error);
+.then(session_data => {
+    userId = session_data.user_id;
+    getChasses(userId);
 });
 
-//Recuperation des informations de ces chasses et ajout a l'array basetemporaire
-
-
-url="http://localhost:3000/api/chasses";
-fetch(url, {
-    method: 'GET',
-    headers: {
-        'Content-Type': 'application/json'
-    },
-})
-.then(response => {
-    if (!response.ok) {
-        throw new Error(`Erreur HTTP : ${response.status}`);
-    }
-    return response.json();
-})
-.then(hunts => {
-    hunts.forEach(hunt => {
-        if (listeChasses.joués.includes(hunt._id) || listeChasses.crées.includes(hunt._id)) {
-            let teamName;
-            hunt.playingTeams.forEach(team => {
-                if (team.teamPlayersIds.includes(userId)){
-                    teamName = team.teamName;
-                }
-            });
-            let temp = {
-                type : "",
-                startDate : hunt.startDate.substring(0,10),
-                name : hunt.name,
-                teamName : teamName,
-                nbTeams : hunt.nbTeams,
-                duration : `${Math.floor(hunt.duration/60)}h${hunt.duration%60}`,
-                place : hunt.place,
-            }
-            if (listeChasses.joués.includes(hunt._id)){
-                temp.type = "jouée";
-            }
-            else{
-                temp.type = "crée";
-            }
-            baseTemporaire.push(temp);
-        }
+function getChasses(userId) {
+    url = `http://localhost:3000/api/accounts/${userId}`;
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
     })
-    initHistoList();
-})
-.catch(error => {
-    console.error('Erreur lors de la requête :', error);
-});
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(user => {
+            listeChasses.joués = user.chassesParticipated;
+            listeChasses.crées = user.chassesCreated;
+        })
+        .catch(error => {
+            console.error('Erreur lors de la requête :', error);
+        });
+
+    //Recuperation des informations de ces chasses et ajout a l'array basetemporaire
+
+
+    url = "http://localhost:3000/api/chasses";
+    fetch(url, {
+        method: 'GET',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+    })
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Erreur HTTP : ${response.status}`);
+            }
+            return response.json();
+        })
+        .then(hunts => {
+            hunts.forEach(hunt => {
+                if (listeChasses.joués.includes(hunt._id) || listeChasses.crées.includes(hunt._id)) {
+                    let teamName;
+                    hunt.playingTeams.forEach(team => {
+                        if (team.teamPlayersIds.includes(userId)) {
+                            teamName = team.teamName;
+                        }
+                    });
+                    let temp = {
+                        type: "",
+                        startDate: hunt.startDate.substring(0, 10),
+                        name: hunt.name,
+                        teamName: teamName,
+                        nbTeams: hunt.nbTeams,
+                        duration: `${Math.floor(hunt.duration / 60)}h${hunt.duration % 60}`,
+                        place: hunt.place,
+                    }
+                    if (listeChasses.joués.includes(hunt._id)) {
+                        temp.type = "jouée";
+                    } else {
+                        temp.type = "crée";
+                    }
+                    baseTemporaire.push(temp);
+                }
+            })
+            initHistoList();
+        })
+        .catch(error => {
+            console.error('Erreur lors de la requête :', error);
+        });
+}
 
 
 function initHistoList(){
