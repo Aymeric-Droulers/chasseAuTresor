@@ -1,5 +1,6 @@
-//const { addTeam, getAllTeams } = require('../controllers/chasseControllers');
-const { joinTeamByCode, validateStepInProgress, addMapImg, getChasseMapImg} = require('../controllers/chasseControllers');
+const { addTeam, getAllTeams } = require('../controllers/chasseControllers');
+const { joinTeamByCode } = require('../controllers/chasseControllers');
+
 
 // src/routes/userRoutes.js
 const express = require('express');
