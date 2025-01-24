@@ -101,3 +101,30 @@ document.getElementById("edit-hunt").addEventListener("click", function() {
     const selectedHuntId = document.getElementById("hunt-select").value;
     window.location.href = `editionChasse.html?hunt_id=${selectedHuntId}`;
 });
+
+// Assure-toi que la bibliothèque QRCode.js et jsPDF est incluse dans ton projet
+document.getElementById('downloadPdf').addEventListener('click', async () => {
+    if (typeof steps === 'undefined' || steps.length === 0) {
+        alert('Veuillez ajouter des étapes avant de télécharger.');
+        return;
+    }
+
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF();
+
+    for (let i = 0; i < steps.length; i++) {
+        const step = steps[i];
+
+        // Générer une URL dynamique pour l'indice
+        const pageURL = `http://localhost:5500/indice.html?step=${encodeURIComponent(step.hint)}`;
+        const qrCodeData = await QRCode.toDataURL(pageURL); // Génération du QR code
+
+        // Ajouter QR code et texte dans le PDF
+        doc.text(`Étape ${i + 1}: ${step.name}`, 10, 20); // Texte en haut de la page
+        doc.addImage(qrCodeData, 'PNG', 60, 50, 90, 90); // Positionner le QR code
+
+        if (i < steps.length - 1) doc.addPage(); // Ajouter une nouvelle page sauf pour la dernière étape
+    }
+
+    doc.save('chasse_au_tresor.pdf'); // Téléchargement du PDF
+});
