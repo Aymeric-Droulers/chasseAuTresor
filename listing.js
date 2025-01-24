@@ -1,7 +1,7 @@
 // 1. Fonction pour récupérer la liste et mettre à jour l'affichage
 async function fetchChasses() {
     try {
-      const response = await fetch('https://somber-innate-rambutan.glitch.me/api/chasses');
+      const response = await fetch('http://localhost:3000/api/chasses');
       if (!response.ok) {
         throw new Error(`Erreur serveur : ${response.status}`);
       }
