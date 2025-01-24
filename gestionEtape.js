@@ -476,7 +476,7 @@ downloadPdfButton.addEventListener('click', async () => {
     const step = steps[i];
 
     // Générer une URL dynamique pour l'indice
-    const pageURL = `https://mon-site.com/indice.html?step=${encodeURIComponent(step.hint)}`;
+    const pageURL = `http://localhost:5500/indice.html?step=${encodeURIComponent(step.hint)}`;
     const qrCodeData = await QRCode.toDataURL(pageURL);
 
     // Ajouter QR code et texte dans le PDF
