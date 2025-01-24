@@ -1,5 +1,7 @@
 const multer = require('multer');
 const path = require('path');
+const {ObjectId} = require("mongodb");
+const {getDB} = require("./db");
 
 // Configuration du stockage des fichiers
 const storage = multer.diskStorage({
@@ -11,6 +13,14 @@ const storage = multer.diskStorage({
         const id = req.params.id;
         const extension = path.extname(file.originalname); // Récupérer l'extension du fichier
         const newName = `${id}${extension}`;
+        const objectId = new ObjectId(id);
+
+
+        const db = getDB();
+        const result = db.collection('Chasses').updateOne(
+            { _id: objectId },
+            { $set: { mapFile: newName } }
+        );
         cb(null, newName);
     }
 });

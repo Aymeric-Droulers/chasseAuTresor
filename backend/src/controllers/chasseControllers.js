@@ -449,13 +449,8 @@ exports.addMapImg = async (req, res) => {
 
 
             //insertion dans la BDD
-          /*  const objectId = new ObjectId(id);
-            const db = getDB();
-            const result = db.collection('Chasses').updateOne(
-                { _id: objectId },
-                { $set: { mapFile: insertFileName } }
-            );
-*/
+
+
 
 
 
