@@ -11,6 +11,25 @@ function togglePassword() {
   // Charger les données utilisateur depuis la base de données
   async function loadUserData() {
     try {
+      fetch("http://localhost:3000/api/session", {
+        method: 'GET',
+        credentials: 'include',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      })
+        .then(response => {
+          if (!response.ok) {
+            throw new Error(`Erreur HTTP : ${response.status}`);
+          }
+          return response.json();
+        })
+        .then(session_data => {
+          console.log('Données de la session:', session_data);
+        }).catch(error => {
+          console.error('Erreur lors de la requête:', error);
+          window.location.assign("accueil.html");
+      })
       // Utiliser l'ID spécifique pour Aymeric
       const userId = '678e787112a848a6dba28745'; 
       const response = await fetch(`http://localhost:3000/api/accounts/${userId}`);
