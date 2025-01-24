@@ -46,10 +46,9 @@ fetch(url, {
     return response.json();
 })
 .then(hunts => {
-    hunts.forEach(huntGet => {
-        if (huntGet._id == huntId) {
-            hunt = huntGet;
-            mapOutput.src = "./backend/public/maps/" + huntId + ".png";
+    hunts.forEach(hunt => {
+        if (hunt._id == huntId) {
+            //mapOutput.src = "./backend/public/maps/" + huntId + ".png";
             for (let i = 0; i < hunt.steps.length; i++) {
                 inputStepName.value = hunt.steps[i].stepName;
                 inputStepHint.value = hunt.steps[i].stepHint;
@@ -58,6 +57,27 @@ fetch(url, {
             }
             inputStepName.value = "";
             inputStepHint.value = "";
+
+            url = "http://localhost:3000/api/chasses/"+huntId+"/getMapImg";
+
+            fetch(url, {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json/image'
+                },
+                })
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error(`Erreur HTTP : ${response.status}`);
+                }
+                return response.json();
+            })
+            .then(map => {
+                mapInput.files.push(map);
+            })
+            .catch(error => {
+                console.error('Erreur lors de la requête :', error);
+            });
         }
     })
 })
@@ -229,7 +249,9 @@ function validateMap() {
         }
     }
     if (!isEmpty) {
-        mapInput.remove();
+        //mapInput.remove();
+        mapInput.style.position = "absolute";
+        mapInput.style.left = "1000000px";
         buttonMapValidation.remove();
         tablePoints = document.createElement("table");
         mapForm.appendChild(tablePoints);
@@ -243,7 +265,7 @@ function validateMap() {
 
 function placePoints(e) {
     if (placingPoints && listPointsMap.length < listSteps.length) {
-        listPointsMap.push([e.clientX-5-mapOutput.offsetLeft,e.clientY-5-mapOutput.offsetTop+57.5])
+        listPointsMap.push([e.clientX-5-mapOutput.offsetLeft,e.clientY-5-mapOutput.offsetTop])
 
         newPointRow = document.createElement("tr");
         rowNumber = document.createElement("th");
@@ -406,10 +428,10 @@ function sendToDB() {
     }
 
     if (allValid) {
+        url = "http://localhost:3000/api/chasses/" + huntId + "/addStep";
         var data = {};
         data["steps"] = [];
         data["steps"].push({});
-        //data["map"] = mapOutput.src;
         for (let i = 0; i < listSteps.length; i++) {
             data["steps"][0]["stepId"] = i;
             data["steps"][0]["stepName"] = listSteps[i][0];
@@ -435,6 +457,7 @@ function sendToDB() {
                 console.error('Erreur lors de la requête :', error);
             });
         }
+        url = "";
     }
 }
 
