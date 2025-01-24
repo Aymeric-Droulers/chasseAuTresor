@@ -32,3 +32,9 @@ body {
     margin-top: 20px;
   }
   
+  .team-info {
+    text-align: right;
+    margin-right: 20px;
+    font-size: 14px;
+    color: #333;
+}

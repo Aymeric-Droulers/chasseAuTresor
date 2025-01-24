@@ -105,6 +105,18 @@ function redirectToEndPage() {
   }
 }
 
+async function fetchTeamInfo(teamId) {
+  try {
+      const response = await fetch(`http://localhost:3000/api/teams/${teamId}`);
+      if (!response.ok) throw new Error('Erreur lors de la récupération des informations de l\'équipe.');
+      return await response.json();
+  } catch (error) {
+      console.error('Erreur lors de la récupération des informations de l\'équipe :', error);
+      alert('Impossible de charger les informations de l\'équipe.');
+  }
+}
+
+
 // Formatage du temps en HH:MM:SS
 function formatHMS(totalSec) {
   let hrs  = Math.floor(totalSec / 3600);
@@ -119,29 +131,47 @@ function formatHMS(totalSec) {
   return `${hrs}:${mins}:${secs}`;
 }
 
+document.getElementById("teamListButton").addEventListener("click", () => {
+  const urlParams = new URLSearchParams(window.location.search);
+  const chasseId = urlParams.get("id");
+  if (chasseId) {
+      window.location.href = `equipe.html?id=${chasseId}`;
+  } else {
+      alert("ID de la chasse introuvable.");
+  }
+});
+
 // Fonction pour récupérer les données de la chasse
 async function fetchChasseData() {
   const urlParams = new URLSearchParams(window.location.search);
-  chasseId = urlParams.get("id"); // Récupère l'identifiant de la chasse depuis l'URL
+  const chasseId = urlParams.get('id');
+  const teamId = urlParams.get('teamId'); // Récupérer l'ID de l'équipe dans l'URL
 
   if (!chasseId) {
-    document.getElementById("message").textContent = "Chasse non trouvée.";
-    return;
+      document.getElementById('message').textContent = 'Chasse non trouvée.';
+      return;
   }
 
   try {
-    const response = await fetch(`http://localhost:3000/api/chasses/${chasseId}`);
-    if (!response.ok) {
-      throw new Error(`Erreur serveur : ${response.status}`);
-    }
+      const response = await fetch(`http://localhost:3000/api/chasses/${chasseId}`);
+      if (!response.ok) throw new Error('Erreur lors de la récupération des données de la chasse.');
+      const chasseData = await response.json();
 
-    const chasseData = await response.json();
-    initChasseData(chasseData);
+      // Initialiser les données de la chasse
+      initChasseData(chasseData);
+
+      // Récupérer et afficher les infos de l'équipe
+      if (teamId) {
+          const teamInfo = await fetchTeamInfo(teamId);
+          document.getElementById('teamName').textContent = teamInfo.teamName;
+          document.getElementById('teamMembers').textContent = teamInfo.teamPlayersIds.join(', ');
+      }
   } catch (error) {
-    console.error("Erreur lors de la récupération des données de la chasse :", error);
-    document.getElementById("message").textContent = "Erreur lors de la récupération des données.";
+      console.error('Erreur lors de la récupération des données de la chasse :', error);
+      document.getElementById('message').textContent = 'Erreur lors de la récupération des données.';
   }
 }
+
 
 // Initialisation au chargement de la page
 document.addEventListener("DOMContentLoaded", fetchChasseData);
