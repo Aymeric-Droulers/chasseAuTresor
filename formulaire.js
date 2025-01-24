@@ -16,7 +16,7 @@ fetch(url, {
         console.log(data);
     }).catch(error => {
         console.error('Erreur lors de la requête:', error);
-        // window.location.assign("accueil.html");
+        window.location.assign("accueil.html");
     })
 
 
@@ -154,14 +154,14 @@ document.querySelector('form').addEventListener('submit', async function(event) 
             }
             return response.json();
         })
-        .then(data => {
-            console.log('Réponse du serveur:', data);
+        .then(response => {
+            console.log('Réponse du serveur:', response);
+            window.location.href = `gestionEtape.html?hunt_id=${response.id}`;
         })
         .catch(error => {
             console.error('Erreur lors de la requête:', error);
         });
-        window.location.assign("menu_admin.html");
-    //}
+
 });
 
 document.getElementById('auto-fill').addEventListener('click', function() {

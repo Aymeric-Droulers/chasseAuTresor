@@ -9,6 +9,8 @@ exports.logout = (req, res) => {
     });
 }
 
+
+
 exports.login = async (req, res) => {
     let mail=req.body.email;
     let password=req.body.password;
@@ -29,6 +31,7 @@ exports.login = async (req, res) => {
         res.status(401).json({ message: 'Mail ou mot de passe incorrect' })
     }
 }
+
 
 async function getAccount(mail,password) {
     let data = await getAccountByMail(mail);

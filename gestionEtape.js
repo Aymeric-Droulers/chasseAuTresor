@@ -27,8 +27,7 @@ var mapToPutInDB = false;
 const urlParams = new URLSearchParams(window.location.search);
 var huntId = urlParams.get('hunt_id');
 if (!huntId) {
-    //window.location.href = "accueil.html";
-    window.location.href = "gestionEtape.html?hunt_id=678f6541897e114b88f2e497";
+    window.location.href = "accueil.html";
 }
 
 var url = "http://localhost:3000/api/chasses/";

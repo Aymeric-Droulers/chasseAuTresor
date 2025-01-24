@@ -6,6 +6,7 @@ document.addEventListener("DOMContentLoaded", () => {
     const connectAlert = document.getElementById("Connectalert");
     const connectButton = document.getElementById("Connect");
     const signupButton = document.getElementById("Signup");
+    const nameInput = document.getElementById("Name");
 
     // Vérifier le format de l'adresse mail
     mailInput.addEventListener("input", () => {
@@ -19,6 +20,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Action pour le bouton "Se connecter"
     connectButton.addEventListener("click", async () => {
+        const name = nameInput.value.trim();
         const email = mailInput.value.trim();
         const password = passwordInput.value.trim();
 
@@ -52,35 +54,37 @@ document.addEventListener("DOMContentLoaded", () => {
 
     // Action pour le bouton "Créer le compte"
     signupButton.addEventListener("click", async () => {
-        const email = mailInput.value.trim();
+        const name = nameInput.value.trim();
+        console.log(name);
+        const mail = mailInput.value.trim();
         const password = passwordInput.value.trim();
 
-        if (!email || !password) {
+        if (!mail || !password) {
             mailAlert.textContent = "Tous les champs doivent être remplis.";
             mailAlert.style.display = "block";
             return;
         }
 
         const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(email)) {
+        if (!emailRegex.test(mail)) {
             mailAlert.textContent = "Veuillez fournir une adresse mail valide.";
             mailAlert.style.display = "block";
             return;
         }
 
         try {
-            const response = await fetch("/signup", {
+            const response = await fetch("http://localhost:3000/api/accounts/addAccount", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json"
                 },
                 credentials:'include',
-                body: JSON.stringify({ email, password })
+                body: JSON.stringify({ name, mail, password })
             });
 
             if (response.ok) {
                 alert("Compte créé avec succès !");
-                window.location.href = "/login"; // Redirection vers la page de connexion
+                window.location.href = "login.html"; // Redirection vers la page de connexion
             } else {
                 mailAlert.textContent = "L'adresse mail existe déjà.";
                 mailAlert.style.display = "block";
