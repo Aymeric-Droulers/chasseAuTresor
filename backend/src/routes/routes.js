@@ -1,4 +1,4 @@
-const { addTeam, getAllTeams } = require('../controllers/chasseControllers');
+const { getAllTeams } = require('../controllers/chasseControllers');
 const { joinTeamByCode } = require('../controllers/chasseControllers');
 
 
