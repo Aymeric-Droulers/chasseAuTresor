@@ -48,17 +48,6 @@ document.querySelector('form').addEventListener('submit', async function(event) 
                 throw new Error('Network response was not ok ' + response.statusText);
             }
             const total = await response.json(); // Assigner directement les données
-
-            // Utiliser total dans la boucle
-            for(let i=0; i<total.length; i++){
-                if(data["accessCode"] == total[i]["accessCode"]){
-                    ok = false;
-                    console.log(total[i]["accessCode"])
-                    console.log(data["accessCode"])
-                    alert('Le code d accès existe déjà.')
-                    return;
-                }
-            }
         } catch (error) {
             console.error('Erreur lors de la requête:', error);
         }

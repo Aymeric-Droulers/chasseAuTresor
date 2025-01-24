@@ -10,6 +10,7 @@ function togglePassword() {
   
   // Charger les données utilisateur depuis la base de données
   async function loadUserData() {
+  let userId='';
     try {
       fetch("http://localhost:3000/api/session", {
         method: 'GET',
@@ -30,6 +31,8 @@ function togglePassword() {
           console.error('Erreur lors de la requête:', error);
           window.location.assign("accueil.html");
       })
+
+
       // Utiliser l'ID spécifique pour Aymeric
       const userId = '678e787112a848a6dba28745'; 
       const response = await fetch(`http://localhost:3000/api/accounts/${userId}`);
