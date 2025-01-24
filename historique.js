@@ -6,7 +6,7 @@ let url;
 const urlParams = new URLSearchParams(window.location.search);
 const userId = urlParams.get('userId');
 if(!userId){
-    window.location.href = `login.html`;
+    //window.location.href = `login.html`;
 }
 
 let listeChasses = {
