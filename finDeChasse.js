@@ -5,8 +5,7 @@ var tableClassement = document.getElementById("classement");
 const urlParams = new URLSearchParams(window.location.search);
 var id = urlParams.get('hunt_id');
 if (!id) {
-    //window.location.href = "accueil.html";
-    window.location.href = "finDeChasse.html?hunt_id=678f6541897e114b88f2e497";
+    window.location.href = "accueil.html";
 }
 const url = "http://localhost:3000/api/chasses/" + id;
 var hunt;
