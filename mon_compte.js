@@ -19,7 +19,9 @@ async function loadUserData() {
       }
     });
     if (!sessionResponse.ok) {
+      window.location.assign("accueil.html");
       throw new Error(`Erreur HTTP : ${sessionResponse.status}`);
+
     }
     const sessionData = await sessionResponse.json();
     console.log('Données de la session:', sessionData);
@@ -80,7 +82,6 @@ async function loadUserData() {
 
   } catch (error) {
     console.error('Erreur lors du chargement des données utilisateur:', error);
-    window.location.assign("accueil.html");
   }
 }
 
